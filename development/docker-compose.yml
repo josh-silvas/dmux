@@ -1,0 +1,22 @@
+---
+version: "3.4"
+x-build: &build
+  build:
+    context: "../"
+    dockerfile: "development/Dockerfile"
+    args:
+      ALPINE_VERSION: "3.18"
+      GO_VERSION: "1.20.5"
+      GORELEASER_VERSION: "1.18.2"
+      GOLANGCILINT_VERSION: "1.51.2"
+  image: "josh-silvas/nbot-build:latest"
+
+services:
+  nbot-build:
+    <<: *build
+    env_file:
+      - ".env"
+    volumes:
+      - "../:/workdir"
+      - "./settings.ini:/root/.config/nbot/settings.ini"
+    tty: true

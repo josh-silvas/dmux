@@ -1,0 +1,17 @@
+---
+site_name: "NBot CLI"
+site_url: "https://example.com/"
+repo_url: "https://github.com/josh-silvas/nbot/"
+nav:
+  - Home: "index.md"
+  - Installing: "installation.md"
+  - Usage Guide: "usage_guide.md"
+  - Contributing: "contributing.md"
+  - More Help: "more_help.md"
+theme: "readthedocs"
+docs_dir: "docs"
+site_dir: ".pages"
+markdown_extensions:
+  toc:
+    permalink: true
+  admonition: {}

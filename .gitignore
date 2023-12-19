@@ -1,0 +1,27 @@
+# IntelliJ Files
+.idea/
+*.iml
+
+# Secret Files
+.auth
+.token
+.pass
+local
+
+# binary files
+/build/*
+*.pyc
+
+playground/
+plugins/winr/*
+
+# Random OS files
+.qicon
+.qnicon
+.DS_Store
+coverage.txt
+
+# Development files
+.pages
+development/.env
+.config
