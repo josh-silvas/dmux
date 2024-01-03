@@ -16,11 +16,11 @@ type Device struct {
 
 // NewDevice : Helper method to fetch a device from Nautobot using a
 // set of different methods, explained below.
-func NewDevice(c *sot.SoT, arg string) (Device, error) {
+func NewDevice(c sot.SoT, arg string) (Device, error) {
 	// 1. Check if the value passed in is a valid IPv4 address. If
 	//    so, then get the device by IP address.
 	if ip := net.ParseIP(arg); ip != nil {
-		device, err := c.DeviceByIP(ip)
+		device, err := c.GetDevice(sot.ByIP, ip)
 		if err != nil {
 			return Device{}, err
 		}
@@ -30,7 +30,7 @@ func NewDevice(c *sot.SoT, arg string) (Device, error) {
 	// 2. Next, check if the value passed in can be resolved via DNS. If
 	//    so, take the DNS resolved IP address and fetch by IP.
 	if ip := dnsLookup(arg); ip != nil {
-		device, err := c.DeviceByIP(ip)
+		device, err := c.GetDevice(sot.ByIP, ip)
 		if err != nil {
 			return Device{}, err
 		}
@@ -39,7 +39,7 @@ func NewDevice(c *sot.SoT, arg string) (Device, error) {
 
 	// 3. Finally, attempt to fetch the device by a partial case-insensitive
 	//    device name match in Nautobot.
-	device, err := c.DeviceByName(arg)
+	device, err := c.GetDevice(sot.ByName, arg)
 	if err != nil {
 		return Device{}, err
 	}
@@ -66,7 +66,7 @@ func dnsLookup(s string) net.IP {
 
 // HostPort : Helper method on the Device struct used to gather the
 // IP Address/SSH port combination for this device.
-func (d *Device) HostPort(port string) string {
+func (d Device) HostPort(port string) string {
 	a := d.IP
 	if strings.Contains(a, "/") {
 		a = strings.Split(a, "/")[0]
@@ -78,7 +78,7 @@ func (d *Device) HostPort(port string) string {
 }
 
 // InteractiveShell func will kick off an interactive ssh shell
-func (d *Device) InteractiveShell(user, pass, port string) error {
+func (d Device) InteractiveShell(user, pass, port string) error {
 	c, err := NewDialer(d.HostPort(port), user, pass)
 	if err != nil {
 		logrus.Fatalf("[New::%s]", err)
@@ -98,7 +98,7 @@ func (d *Device) InteractiveShell(user, pass, port string) error {
 }
 
 // RunCommand func will kick off an ssh session and run arbitrary commands on a device.
-func (d *Device) RunCommand(cmd string, user, pass, port string) ([]byte, error) {
+func (d Device) RunCommand(cmd string, user, pass, port string) ([]byte, error) {
 	c, err := NewDialer(d.HostPort(port), user, pass)
 	if err != nil {
 		return nil, err

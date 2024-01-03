@@ -4,13 +4,14 @@ package core
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"syscall"
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/sirupsen/logrus"
+	"github.com/josh-silvas/nbot/nlog"
 )
 
 const (
@@ -24,12 +25,19 @@ type (
 	// It embeds the argparse Parser type.
 	Parser struct {
 		*argparse.Parser
-		Plugins []Plugin
+		Plugins []PluginIfc
 	}
-	// Plugin is the command and calling function for each plugin
-	Plugin struct {
-		CMD  *argparse.Command
-		Func func(keyring.Settings)
+
+	// PluginBase : base struct for all plugins
+	PluginBase struct {
+		C   *argparse.Command
+		Log nlog.Logger
+	}
+
+	PluginIfc interface {
+		Register(*Parser) PluginIfc
+		CMD() *argparse.Command
+		Func(keyring.Settings)
 	}
 )
 
@@ -37,19 +45,19 @@ var debugFlag *bool
 
 // NewParser function will initiate and return the parent parser for the
 // nbot app.
-func NewParser(fn ...func(*Parser) Plugin) Parser {
+func NewParser(plugins ...PluginIfc) Parser {
 	// Create new main parser object
 	p := Parser{
-		Parser:  argparse.NewParser(AppName, "NBot ʘ‿ʘ: Nautobot CLI."),
-		Plugins: make([]Plugin, 0),
+		Parser:  argparse.NewParser(AppName, "NBot ʘ‿ʘ: Networking CLI."),
+		Plugins: make([]PluginIfc, 0),
 	}
 
 	// Define the top-level arguments pinned to the nbot parser.
 	debugFlag = p.Flag("", "debug", &argparse.Options{Help: "view debug level logging"})
 
 	// Register the plugin commands into the parser
-	for _, f := range fn {
-		p.Plugins = append(p.Plugins, f(&p))
+	for i := range plugins {
+		p.Plugins = append(p.Plugins, plugins[i].Register(&p))
 	}
 	return p
 }
@@ -66,11 +74,11 @@ func (p *Parser) Run(cfg keyring.Settings) {
 		syscall.Exit(1)
 	}
 	if *debugFlag {
-		logrus.SetLevel(logrus.DebugLevel)
+		nlog.LogLevel.Set(slog.LevelDebug)
 	}
 
 	for _, v := range p.Plugins {
-		if v.CMD.Happened() {
+		if v.CMD().Happened() {
 			v.Func(cfg)
 		}
 	}

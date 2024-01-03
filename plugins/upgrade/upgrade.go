@@ -7,11 +7,12 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/josh-silvas/nbot/core"
 	"github.com/josh-silvas/nbot/core/keyring"
+	"github.com/josh-silvas/nbot/nlog"
 	"github.com/josh-silvas/nbot/plugins/version"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -23,28 +24,43 @@ const (
 	osxCmd2    = "brew upgrade nbot"
 )
 
-// Plugin function will return an argparse.Command type back to the parent parser
-// nolint:typecheck
-func Plugin(p *core.Parser) core.Plugin {
-	cmd := p.NewCommand("upgrade", "Attempt an upgrade of NBot.")
-	return core.Plugin{CMD: cmd, Func: pluginFunc}
+const pluginName = "upgrade"
+
+// Plugin type is used as the command and calling function for each plugin
+type Plugin struct {
+	core.PluginBase
 }
 
-// pluginFunc function is executed from the caller
-func pluginFunc(cfg keyring.Settings) {
-	runningVer := version.SemVer(cfg.Meta["buildVersion"])
+// Register : registers the plugin with the parser
+func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+	p.Log = nlog.NewWithGroup(pluginName)
+	p.C = c.NewCommand(pluginName, "Attempt an upgrade of NBot.")
+	return p
+}
+
+// CMD : returns the command for the plugin
+func (p Plugin) CMD() *argparse.Command {
+	return p.C
+}
+
+// Func : function that will be executed from the nbot caller
+func (p Plugin) Func(cfg keyring.Settings) {
+	runningVer, err := version.SemVer(cfg.Meta["buildVersion"])
+	if err != nil {
+		p.Log.Fatalf("[NBot Upgrade] %s", err)
+	}
 	key, err := version.FromConfigFile(cfg)
 	if err != nil {
-		logrus.Fatalf("[NBot Upgrade] %s", err)
+		p.Log.Fatalf("[NBot Upgrade] %s", err)
 	}
 	key.SetValue(version.ConfigVersion{Version: runningVer, Timestamp: time.Now()}.String())
 	if err = cfg.File.SaveTo(cfg.Source); err != nil {
-		logrus.Fatalf("[NBot Upgrade] Version check failed. %s", err)
+		p.Log.Fatalf("[NBot Upgrade] Version check failed. %s", err)
 	}
 
-	apiVer, err := version.FromArtifactory("")
+	apiVer, err := version.FromGitHub()
 	if err != nil {
-		logrus.Fatalf("[NBot Upgrade] Version check failed. %s", err)
+		p.Log.Fatalf("[NBot Upgrade] Version check failed. %s", err)
 	}
 
 	if !runningVer.LessThan(apiVer) {
@@ -81,6 +97,6 @@ func pluginFunc(cfg keyring.Settings) {
 		}
 		fmt.Println(text.FgHiGreen.Sprintf(msgSuccess, string(out)))
 	default:
-		logrus.Error("Unknown OS, check https://github.com/josh-silvas/nbot for install/upgrade options")
+		p.Log.Error("Unknown OS, check https://github.com/josh-silvas/nbot for install/upgrade options")
 	}
 }

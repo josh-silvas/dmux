@@ -2,18 +2,20 @@ package keyring
 
 import (
 	"fmt"
+	"log/slog"
 	"os/user"
 	"strconv"
 	"time"
 
 	"github.com/99designs/keyring"
+	"github.com/josh-silvas/nbot/nlog"
 	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
 )
 
 var (
 	userProfile *user.User
-	logger      Logger
+	l           nlog.Logger
 )
 
 type (
@@ -80,7 +82,7 @@ func PromptUser() Option {
 
 // New function will initialize a logger type, gather profile information
 // and set up the config directory if needed.
-func New(logImport Logger) (s Settings, err error) {
+func New(logger nlog.Logger) (s Settings, err error) {
 	userProfile, err = user.Current()
 	if err != nil {
 		return s, err
@@ -88,14 +90,13 @@ func New(logImport Logger) (s Settings, err error) {
 	if err = CreateIfNotExist(userProfile.HomeDir); err != nil {
 		return s, err
 	}
-	logger = logImport
 	cfg, err := GetConfig("")
 	if err != nil {
 		return s, err
 	}
 
 	// If we are at debug level in logrus, set debug in keyring
-	keyring.Debug = logrus.GetLevel() == logrus.DebugLevel
+	keyring.Debug = logger.Level() == slog.LevelDebug
 	cfg.Key = make(map[string]keyring.Keyring)
 
 	cfg.Key["default"], err = open("default")

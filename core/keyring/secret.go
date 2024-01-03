@@ -84,7 +84,7 @@ func (s *Settings) SetCredential(user, key, service string, exp int64) (Credenti
 	}
 
 	if err := s.Key[service].Set(item); err != nil {
-		logPrint("error at SetCredential/keyring.Set")
+		l.Errorf("error setting credential SetCredential:keyring.Set: %s", err)
 		return cred, fmt.Errorf("SetCredential.Set:%w", err)
 	}
 	return cred, nil

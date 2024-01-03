@@ -8,71 +8,83 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/josh-silvas/nbot/core"
 	"github.com/josh-silvas/nbot/core/keyring"
+	"github.com/josh-silvas/nbot/nlog"
 	"github.com/josh-silvas/nbot/shared/connection"
-	"github.com/sirupsen/logrus"
+	"github.com/josh-silvas/nbot/shared/sot"
 )
 
-var (
+const pluginName = "ssh"
+
+// Plugin type is used as the command and calling function for each plugin
+type Plugin struct {
+	core.PluginBase
 	argD *string
 	argP *string
 	argC *string
 	argU *string
-)
-
-// Plugin function will return an argparse.Command type back to the parent parser
-// nolint:typecheck
-func Plugin(p *core.Parser) core.Plugin {
-	cmd := p.NewCommand("ssh", "Opens an interactive ssh shell.")
-	argD = cmd.StringPositional(&argparse.Options{Required: true, Help: "One of DeviceName, IPAddress, DeviceID"})
-	argP = cmd.String("p", "port", &argparse.Options{Help: "SSH port to use. Default: 22", Default: "22"})
-	argC = cmd.String("c", "command", &argparse.Options{Help: "Optional: Single command to run on the device and exit."})
-	argU = cmd.String("u", "user", &argparse.Options{Help: "Optional: Override user credentials to connect to device."})
-	return core.Plugin{CMD: cmd, Func: pluginFunc}
 }
 
-// pluginFunc function is executed from the caller
-func pluginFunc(cfg keyring.Settings) {
+func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+	p.Log = nlog.NewWithGroup(pluginName)
+	p.C = c.NewCommand("ssh", "Opens an interactive ssh shell.")
+	p.argD = p.C.StringPositional(&argparse.Options{Required: true, Help: "One of DeviceName, IPAddress, DeviceID"})
+	p.argP = p.C.String("p", "port", &argparse.Options{Help: "SSH port to use. Default: 22", Default: "22"})
+	p.argC = p.C.String("c", "command", &argparse.Options{Help: "Optional: Single command to run on the device and exit."})
+	p.argU = p.C.String("u", "user", &argparse.Options{Help: "Optional: Override user credentials to connect to device."})
+	return p
+}
+
+func (p Plugin) CMD() *argparse.Command {
+	return p.C
+}
+
+func (p Plugin) Func(cfg keyring.Settings) {
 	// 1. Check that a device has been passed in
-	if strings.TrimSpace(*argD) == "" {
-		logrus.Fatalf("A device must be specified! `nbot ssh [DeviceName, IPAddress, DeviceID]`")
+	if strings.TrimSpace(*p.argD) == "" {
+		p.Log.Fatal("A device must be specified! `nbot ssh [DeviceName, IPAddress, DeviceID]`")
 	}
 
 	rKey, err := cfg.DeviceAuth()
 	if err != nil {
-		logrus.Fatalf("RADIUS(%s)", err)
+		p.Log.Fatalf("RADIUS(%s)", err)
 	}
 
 	// 3. If there is a user passed in, attempt to fetch credentials from the
 	// keychain, or prompt for password.
-	if *argU != "" {
-		rKey, err = cfg.UserPassCustom(*argU)
+	if *p.argU != "" {
+		rKey, err = cfg.UserPassCustom(*p.argU)
 		if err != nil {
-			logrus.Fatalf("DeviceAuth(%s)", err)
+			p.Log.Fatalf("DeviceAuth(%s)", err)
 		}
 	}
 
-	// 5. Initialize a device from NetBox or from DNS.
-	d, err := connection.NewDevice(*argD)
+	nb, err := sot.New(cfg)
 	if err != nil {
-		logrus.Fatalf("Device(%s)", err)
+		p.Log.Fatalf("New(%s)", err)
 	}
 
-	if *argC != "" {
-		out, err := d.RunCommand(*argC, rKey.Username, rKey.Password(), *argP)
+	// 5. Initialize a device from NetBox or from DNS.
+	d, err := connection.NewDevice(nb, *p.argD)
+	if err != nil {
+		p.Log.Fatalf("Device(%s)", err)
+	}
+
+	if *p.argC != "" {
+		out, err := d.RunCommand(*p.argC, rKey.Username, rKey.Password(), *p.argP)
 		if err != nil {
-			logrus.Fatalf("RunCommands(%s)", err)
+			p.Log.Fatalf("RunCommands(%s)", err)
 		}
 		fmt.Println(string(out))
 		return
 	}
 
-	fmt.Println(text.FgHiCyan.Sprintf("\nLogging into %s: %s [%s] ", d.ID, d.Hostname, d.Status.Label))
+	fmt.Println(text.FgHiCyan.Sprintf("\nLogging into %s: %s [%s] ", d.ID, d.Hostname, d.Status))
 	if d.Comments != "" {
 		fmt.Println(text.FgHiYellow.Sprintf("Device has comments:\n%s", d.Comments))
 	}
 
 	// 6. Launch interactive shell.
-	if err := d.InteractiveShell(rKey.Username, rKey.Password(), *argP); err != nil {
-		logrus.Fatalf("InteractiveShell(%s)", err)
+	if err := d.InteractiveShell(rKey.Username, rKey.Password(), *p.argP); err != nil {
+		p.Log.Fatalf("InteractiveShell(%s)", err)
 	}
 }

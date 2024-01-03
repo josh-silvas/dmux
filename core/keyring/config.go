@@ -57,13 +57,13 @@ type Settings struct {
 func CreateIfNotExist(homeDir string) error {
 	path := fmt.Sprintf("%s/%s", homeDir, ConfigPath)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		logPrint("directory does not exist, creating directory at ", path)
+		l.Infof("directory does not exist, creating directory at ", path)
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(fmt.Sprintf("%s/%s", path, SettingsFile)); os.IsNotExist(err) {
-		logPrint("file does not exist, creating file ", SettingsFile, path)
+		l.Infof("file does not exist, creating file ", SettingsFile, path)
 		file, err := os.Create(fmt.Sprintf("%s/%s", path, SettingsFile))
 		defer func() {
 			if e := file.Close(); e != nil {
@@ -92,7 +92,7 @@ func GetConfig(homeDir string) (Settings, error) {
 
 	settings.File, err = ini.InsensitiveLoad(settings.Source)
 	if err != nil {
-		logPrint("error at GetConfig/ini.InsensitiveLoad")
+		l.Errorf("error fetching GetConfig:ini.InsensitiveLoad: %s", err)
 		return settings, err
 	}
 	if err := settings.loadBaseSection(settings.File); err != nil {
@@ -111,11 +111,11 @@ func (s *Settings) KeyFromSection(section, key, def string) (*ini.Key, error) {
 	// If there is an error retrieving the section, it likely is not created yet.
 	// attempt to create the section
 	if err != nil {
+		logrus.Infof("Section [%s] not found in %s/%s, creating...", section, ConfigPath, SettingsFile)
 		sec, err = s.File.NewSection(section)
 		if err != nil {
 			return nil, err
 		}
-
 	}
 	value, err := sec.GetKey(key)
 	if err != nil {
@@ -132,6 +132,10 @@ func (s *Settings) KeyFromSection(section, key, def string) (*ini.Key, error) {
 			return nil, err
 		}
 		value.Comment = fmt.Sprintf("Local value for %s->%s stored in NBot's settings.ini file.", section, key)
+		if err := s.File.SaveTo(s.Source); err != nil {
+			return nil, err
+		}
+
 	}
 	return value, nil
 }

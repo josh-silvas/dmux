@@ -65,14 +65,6 @@ func keychainUnlock(cfg Settings) error {
 	return nil
 }
 
-// logPrint function uses the Logger method associated with the non exported value.
-func logPrint(v ...interface{}) {
-	if logger == nil {
-		return
-	}
-	logger(v...)
-}
-
 // splitter : Helper function to split the password field into the username and password
 // if it is a hashed type.
 func splitter(s string) (string, string) {
@@ -136,7 +128,7 @@ func parseCredential(s keyring.Item) (Credential, error) {
 	}
 	exp, err := strconv.ParseInt(parsed[0], 10, 64)
 	if err != nil {
-		logPrint("error at parseCredential/strconv.ParseInt")
+		l.Errorf("error parsing credential:strconv.ParseInt: %s", err)
 		return resp, err
 	}
 	return Credential{

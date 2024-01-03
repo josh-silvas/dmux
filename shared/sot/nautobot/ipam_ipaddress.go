@@ -95,7 +95,7 @@ func (c *Client) GetIPAddress(uuid string, query *url.Values) (*IPAddress, error
 func (c *Client) GetIPAddresses(query *url.Values) ([]IPAddress, error) {
 	req, err := c.Request(
 		http.MethodGet,
-		"ipam/ip-addresses/",
+		"api/ipam/ip-addresses/",
 		nil,
 		query,
 	)

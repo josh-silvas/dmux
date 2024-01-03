@@ -7,8 +7,9 @@ import (
 )
 
 var (
+	ver, _     = SemVer("v1.2.0")
 	testCfgVer = ConfigVersion{
-		Version:   SemVer("v1.2.0"),
+		Version:   ver,
 		Timestamp: time.Now(),
 	}
 )

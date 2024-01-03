@@ -7,26 +7,37 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/josh-silvas/nbot/core"
 	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/sirupsen/logrus"
+	"github.com/josh-silvas/nbot/nlog"
 )
 
-// Plugin function will return an argparse.Command type back to the parent parser
-// nolint:typecheck
-func Plugin(p *core.Parser) core.Plugin {
-	cmd := p.NewCommand("version", "display current version")
-	return core.Plugin{CMD: cmd, Func: pluginFunc}
+const pluginName = "version"
+
+// Plugin type is used as the command and calling function for each plugin
+type Plugin struct {
+	core.PluginBase
+}
+
+func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+	p.Log = nlog.NewWithGroup(pluginName)
+	p.C = c.NewCommand(pluginName, "display current version")
+	return p
+}
+
+func (p Plugin) CMD() *argparse.Command {
+	return p.C
 }
 
 // pluginFunc function is executed from the nbot caller
-func pluginFunc(cfg keyring.Settings) {
+func (p Plugin) Func(cfg keyring.Settings) {
 	var storedVer ConfigVersion
 	key, err := FromConfigFile(cfg)
 	if err == nil {
 		if storedVer, err = ParseConfigVersion(key.String()); err != nil {
-			logrus.Error(err)
+			p.Log.Errorf("ParseConfigVersion(%s)", err)
 		}
 	}
 	fmt.Println(text.FgGreen.Sprintf("NBot: v%s", storedVer.Version.String()))

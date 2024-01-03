@@ -1,108 +1,95 @@
 package info
 
 import (
+	"errors"
 	"net"
-	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/akamensky/argparse"
 	"github.com/josh-silvas/nbot/core"
 	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/josh-silvas/nbot/shared"
-	"github.com/josh-silvas/nbot/shared/sot/nautobot"
-	"github.com/sirupsen/logrus"
+	"github.com/josh-silvas/nbot/nlog"
+	"github.com/josh-silvas/nbot/shared/sot"
 )
 
-var (
+const pluginName = "info"
+
+// Plugin type is used as the command and calling function for each plugin
+type Plugin struct {
+	core.PluginBase
 	argD  *string
-	argT  *string
-	argS  *string
 	argSe *string
-	argM  *string
-	argV  *bool
-)
-
-// Plugin function will return an argparse.Command type back to the parent parser
-// nolint:typecheck
-func Plugin(p *core.Parser) core.Plugin {
-	cmd := p.NewCommand("info", "Gathers device information.")
-	argD = cmd.StringPositional(&argparse.Options{Required: true, Help: "One of DeviceName, IPAddress, DeviceID"})
-	argT = shared.ArgString(cmd, "tag", "Devices with a tag")
-	argS = shared.ArgString(cmd, "site", "Devices within a given site name.")
-	argM = shared.ArgString(cmd, "mac-address", "Devices within a given mac-address.")
-	argSe = cmd.String("", "serial", &argparse.Options{Help: "Devices by serial number."})
-	argV = cmd.Flag("v", "verbose", &argparse.Options{Help: "Prints additional information [tags, manufacturer, etc]."})
-	return core.Plugin{CMD: cmd, Func: pluginFunc}
 }
 
-// pluginFunc function is executed from the caller
-func pluginFunc(cfg keyring.Settings) {
+func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+	p.Log = nlog.NewWithGroup(pluginName)
+	p.C = c.NewCommand(pluginName, "Gathers device information.")
+	p.argD = p.C.StringPositional(&argparse.Options{Required: true, Help: "One of DeviceName, IPAddress, MacAddress"})
+	p.argSe = p.C.String("", "serial", &argparse.Options{Help: "Devices by serial number."})
+	return p
+}
+
+func (p Plugin) CMD() *argparse.Command {
+	return p.C
+}
+
+func (p Plugin) Func(cfg keyring.Settings) {
 	// 1. Check that a device has been passed in
-	if strings.TrimSpace(*argD) == "" {
-		logrus.Fatalf("A device must be specified! `nbot info [DeviceName, IPAddress, DeviceID]`")
+	if strings.TrimSpace(*p.argD) == "" && strings.TrimSpace(*p.argSe) == "" {
+		p.Log.Fatalf("nbot info [Name, IP Address, Mac Address] or [DeviceSerial] must be provided!")
 	}
 
-	key, err := cfg.Nautobot()
+	s, err := sot.New(cfg)
 	if err != nil {
-		logrus.Fatalf("cfg.Nautobot:VaultRead:%s", err)
-	}
-	nbOpts := make([]nautobot.Option, 0)
-	nb, err := nautobot.New(key.Password(), nbOpts...)
-	if err != nil {
-		logrus.Fatalf("nautobot.New:%s", err)
+		p.Log.Fatalf("error initializing sot.New(%s)", err)
 	}
 
-	// Separate handle if an IP address is passed in as a query param
-	if ip := net.ParseIP(*argD); ip != nil {
-		ips, err := nb.GetIPAddresses(&url.Values{"address": []string{ip.String()}})
+	if *p.argSe != "" {
+		device, err := s.GetDevice(sot.BySerial, *p.argSe)
 		if err != nil {
-			logrus.Fatalf("cfg.Nautobot:IPAddresses:%s", err)
-		}
-		devices := make([]shared.DeviceAggregate, 0)
-		for i := range ips {
-			if ips[i].AssignedObject.Device.ID != "" {
-				nbd, err := shared.GetDeviceAggregates(nb, url.Values{"id": []string{ips[i].AssignedObject.Device.ID}})
-				if err != nil {
-					logrus.Fatalf("cfg.Nautobot:Devices:%s", err)
-				}
-				devices = append(devices, nbd...)
+			if errors.Is(err, sot.ErrorNotImplemented) {
+				p.Log.Warn("sot.BySerial not implemented for this backend.")
+				return
 			}
+			p.Log.Errorf("sot.BySerial: %s", err)
 		}
-		shared.PrintDevices(devices, *argV)
+		PrintDevices([]sot.Device{device})
 		return
 	}
 
-	// Logic to handle device related query params.
-	params := make(url.Values)
-	if *argT != "" {
-		params["tag"] = []string{*argT}
-	}
-	if *argS != "" {
-		params["site"] = []string{*argS}
-	}
-	if *argSe != "" {
-		params["serial"] = []string{*argSe}
-	}
-	if *argM != "" {
-		if hw, err := net.ParseMAC(*argM); err == nil {
-			params["mac_address__ie"] = []string{hw.String()}
-		} else {
-			logrus.Errorf("unable to parse mac-address [%s]", *argM)
+	// No partial matches for IP addresses, return the single device if found.
+	if ip := net.ParseIP(*p.argD); ip != nil {
+		device, err := s.GetDevice(sot.ByIP, ip)
+		if err != nil {
+			if errors.Is(err, sot.ErrorNotImplemented) {
+				p.Log.Warn("sot.ByIP not implemented for this backend.")
+				return
+			}
+			p.Log.Fatalf("sot.ByIP: %s", err)
+			return
 		}
+		PrintDevices([]sot.Device{device})
+		return
 	}
-	if _, err := strconv.Atoi(*argD); err == nil {
-		params["id"] = []string{*argD}
+
+	// No partial matches for mac-addresses, return the single device if found.
+	if mac, err := net.ParseMAC(*p.argD); err == nil {
+		device, err := s.GetDevice(sot.ByMac, mac.String())
+		if err != nil {
+			if errors.Is(err, sot.ErrorNotImplemented) {
+				p.Log.Warn("sot.ByMac not implemented for this backend.")
+				return
+			}
+			p.Log.Fatalf("sot.ByMac: %s", err)
+			return
+		}
+		PrintDevices([]sot.Device{device})
+		return
 	}
-	if _, ok := params["id"]; !ok && *argD != "" {
-		params["name__ic"] = []string{*argD}
-	}
-	if len(params) == 0 {
-		logrus.Fatalln("a query must be specified to retrieve devices from Nautobot")
-	}
-	devices, err := shared.GetDeviceAggregates(nb, params)
+
+	device, err := s.GetDevice(sot.ByName, *p.argD)
 	if err != nil {
-		logrus.Fatalf("cfg.Nautobot.Devices:%s", err)
+		p.Log.Fatalf("sot.ByName: %s", err)
 	}
-	shared.PrintDevices(devices, *argV)
+	PrintDevices([]sot.Device{device})
 }

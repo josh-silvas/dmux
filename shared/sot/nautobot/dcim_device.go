@@ -58,7 +58,7 @@ type (
 func (c *Client) GetDevice(uuid string, query *url.Values) (*Device, error) {
 	req, err := c.Request(
 		http.MethodGet,
-		fmt.Sprintf("dcim/devices/%s/", url.PathEscape(uuid)),
+		fmt.Sprintf("api/dcim/devices/%s/", url.PathEscape(uuid)),
 		nil,
 		query,
 	)
@@ -82,14 +82,13 @@ func (c *Client) GetDevices(query *url.Values) ([]Device, error) {
 	}
 	for {
 		query.Set("offset", fmt.Sprintf("%d", offset))
-		req, err := c.Request(http.MethodGet, "dcim/devices/", nil, query)
+		req, err := c.Request(http.MethodGet, "api/dcim/devices/", nil, query)
 		if err != nil {
 			return nil, err
 		}
 
 		resp := new(rawListResponse)
 		ret := make([]Device, 0)
-
 		if err = c.Do(req, resp); err != nil {
 			return ret, err
 		}

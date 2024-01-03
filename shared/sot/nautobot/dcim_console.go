@@ -55,7 +55,7 @@ type (
 func (c *Client) ConsoleConnections(query *url.Values) ([]ConsolePort, error) {
 	req, err := c.Request(
 		http.MethodGet,
-		"dcim/console-connections/",
+		"api/dcim/console-connections/",
 		nil,
 		query,
 	)

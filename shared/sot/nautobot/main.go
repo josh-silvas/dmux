@@ -47,11 +47,11 @@ type (
 func New(token, nbURL string, opts ...Option) (*Client, error) {
 	client := &Client{
 		token: token,
-		instance: func() *url.URL {
+		instance: func(s string) *url.URL {
 			//nolint:errcheck
-			u, _ := url.Parse(nbURL)
+			u, _ := url.Parse(s)
 			return u
-		}(),
+		}(nbURL),
 	}
 	err := client.processOptions(opts...)
 	return client, err
