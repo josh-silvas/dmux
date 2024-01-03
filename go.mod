@@ -1,6 +1,6 @@
 module github.com/josh-silvas/nbot
 
-go 1.21.5
+go 1.21
 
 require (
 	github.com/99designs/keyring v1.2.2

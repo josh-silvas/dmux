@@ -1,4 +1,4 @@
-package nautobot_v1
+package nautobotv1
 
 type (
 	// NestedDeviceType : defines a stub device_type entry in Nautobot

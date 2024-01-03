@@ -1,4 +1,4 @@
-package nautobot_v1
+package nautobotv1
 
 // Manufacturer : Type definition for a Nautobot Manufacturer.
 type Manufacturer struct {

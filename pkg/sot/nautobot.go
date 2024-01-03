@@ -8,19 +8,19 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/pkg/nautobot_v1"
+	"github.com/josh-silvas/nbot/pkg/nautobotv1"
 	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
 )
 
 // Nautobot implementation of the SoT interface.
 type Nautobot struct {
-	nautobot_v1.Client
+	nautobotv1.Client
 }
 
 // NewNautobot : Creates a new Nautobot client.
-func NewNautobot(token, nbURL string, opts ...nautobot_v1.Option) (*Nautobot, error) {
-	c, err := nautobot_v1.New(token, nbURL, opts...)
+func NewNautobot(token, nbURL string, opts ...nautobotv1.Option) (*Nautobot, error) {
+	c, err := nautobotv1.New(token, nbURL, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func (n Nautobot) deviceByIP(ip net.IP) (Device, error) {
 
 	// 3. For each IP address, query the first match found for a device
 	//    within Nautobot.
-	d := make([]nautobot_v1.Device, 0)
+	d := make([]nautobotv1.Device, 0)
 	for i := range ips {
 		if ips[i].AssignedObject == nil {
 			continue
@@ -125,7 +125,7 @@ func (n Nautobot) deviceByIP(ip net.IP) (Device, error) {
 	return dev, nil
 }
 
-func deviceSelect(devices []nautobot_v1.Device) (nautobot_v1.Device, error) {
+func deviceSelect(devices []nautobotv1.Device) (nautobotv1.Device, error) {
 	prompt := promptui.Select{
 		Label: "Multiple devices found. Select",
 		Items: func() []string {
@@ -139,23 +139,23 @@ func deviceSelect(devices []nautobot_v1.Device) (nautobot_v1.Device, error) {
 
 	_, result, err := prompt.Run()
 	if err != nil {
-		return nautobot_v1.Device{}, err
+		return nautobotv1.Device{}, err
 	}
 	for k := range devices {
 		if result == devices[k].Name {
 			return devices[k], nil
 		}
 	}
-	return nautobot_v1.Device{}, fmt.Errorf("unable to determine device from `%s`", result)
+	return nautobotv1.Device{}, fmt.Errorf("unable to determine device from `%s`", result)
 }
 
-func (n Nautobot) consolePort(id string) (nautobot_v1.ConsolePort, error) {
+func (n Nautobot) consolePort(id string) (nautobotv1.ConsolePort, error) {
 	p, err := n.ConsoleConnections(&url.Values{"device_id": []string{id}})
 	if err != nil {
-		return nautobot_v1.ConsolePort{}, fmt.Errorf("cfg.Nautobot.ConsoleConnections:%w", err)
+		return nautobotv1.ConsolePort{}, fmt.Errorf("cfg.Nautobot.ConsoleConnections:%w", err)
 	}
 	if len(p) == 0 {
-		return nautobot_v1.ConsolePort{}, fmt.Errorf("no console ports found for device `%s`", id)
+		return nautobotv1.ConsolePort{}, fmt.Errorf("no console ports found for device `%s`", id)
 	}
 	return p[0], nil
 }
@@ -163,7 +163,7 @@ func (n Nautobot) consolePort(id string) (nautobot_v1.ConsolePort, error) {
 // deviceByName : Nautobot: Returns a device by name.
 func (n Nautobot) getDevice(params *url.Values) (Device, error) {
 	// 1. Ignore devices in Offline status
-	params.Set("status__n", nautobot_v1.StatusOffline)
+	params.Set("status__n", nautobotv1.StatusOffline)
 
 	// 2. Query Nautobot with the newly built query parameters.
 	d, err := n.GetDevices(params)
@@ -191,7 +191,7 @@ func (n Nautobot) getDevice(params *url.Values) (Device, error) {
 	return n.nbDeviceToSotDevice(d[0]), nil
 }
 
-func (n Nautobot) nbDeviceToSotDevice(d nautobot_v1.Device) Device {
+func (n Nautobot) nbDeviceToSotDevice(d nautobotv1.Device) Device {
 	ret := Device{
 		Hostname: d.Name,
 		IP: func() string {

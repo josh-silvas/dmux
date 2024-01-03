@@ -1,4 +1,4 @@
-package nautobot_v1
+package nautobotv1
 
 // Tag : defines a tag entry in Nautobot
 type Tag struct {

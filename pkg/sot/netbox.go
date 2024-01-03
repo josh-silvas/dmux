@@ -11,7 +11,7 @@ import (
 	transport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/pkg/nautobot_v1"
+	"github.com/josh-silvas/nbot/pkg/nautobotv1"
 	"github.com/manifoldco/promptui"
 	"github.com/netbox-community/go-netbox/v3/netbox/client"
 	"github.com/netbox-community/go-netbox/v3/netbox/client/dcim"
@@ -205,7 +205,7 @@ func (n Netbox) consolePort(id int) (models.ConsolePort, error) {
 // deviceByName : Netbox: Returns a device by name.
 func (n Netbox) getDevice(params *dcim.DcimDevicesListParams) (Device, error) {
 	// 1. Ignore devices in Offline status
-	offline := nautobot_v1.StatusOffline
+	offline := nautobotv1.StatusOffline
 	params.Statusn = &offline
 	params.Context = context.Background()
 
