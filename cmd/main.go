@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/josh-silvas/nbot/core"
-	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/josh-silvas/nbot/nlog"
+	"github.com/josh-silvas/nbot/internal/core"
+	"github.com/josh-silvas/nbot/internal/keyring"
+	"github.com/josh-silvas/nbot/internal/nlog"
 	"github.com/josh-silvas/nbot/plugins/info"
 	"github.com/josh-silvas/nbot/plugins/keystore"
 	sshinteractive "github.com/josh-silvas/nbot/plugins/ssh"
 	"github.com/josh-silvas/nbot/plugins/upgrade"
 	"github.com/josh-silvas/nbot/plugins/version"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -34,7 +33,7 @@ func main() {
 	// default store location (homedir/.config/nbot)
 	cfg, err := keyring.New(l)
 	if err != nil {
-		logrus.Fatalf("nbot.keyring.New:%s", err)
+		l.Fatalf("nbot.keyring.New:%s", err)
 	}
 	cfg.Meta = map[string]string{
 		"buildVersion": buildVersion,

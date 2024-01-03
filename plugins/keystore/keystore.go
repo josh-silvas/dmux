@@ -5,9 +5,9 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/josh-silvas/nbot/core"
-	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/josh-silvas/nbot/nlog"
+	"github.com/josh-silvas/nbot/internal/core"
+	"github.com/josh-silvas/nbot/internal/keyring"
+	"github.com/josh-silvas/nbot/internal/nlog"
 )
 
 const pluginName = "keystore"

@@ -10,8 +10,8 @@ import (
 	"github.com/go-ini/ini"
 	"github.com/google/go-github/github"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/core"
-	"github.com/josh-silvas/nbot/core/keyring"
+	"github.com/josh-silvas/nbot/internal/core"
+	"github.com/josh-silvas/nbot/internal/keyring"
 
 	"github.com/Masterminds/semver"
 )

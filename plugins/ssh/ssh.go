@@ -6,11 +6,11 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/core"
-	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/josh-silvas/nbot/nlog"
-	"github.com/josh-silvas/nbot/shared/connection"
-	"github.com/josh-silvas/nbot/shared/sot"
+	"github.com/josh-silvas/nbot/internal/core"
+	"github.com/josh-silvas/nbot/internal/keyring"
+	"github.com/josh-silvas/nbot/internal/nlog"
+	"github.com/josh-silvas/nbot/pkg/connection"
+	"github.com/josh-silvas/nbot/pkg/sot"
 )
 
 const pluginName = "ssh"

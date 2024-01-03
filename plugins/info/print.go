@@ -7,7 +7,7 @@ import (
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/shared/sot"
+	"github.com/josh-silvas/nbot/pkg/sot"
 )
 
 const noResult = "No results found in the backend SoT"

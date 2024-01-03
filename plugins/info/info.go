@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/akamensky/argparse"
-	"github.com/josh-silvas/nbot/core"
-	"github.com/josh-silvas/nbot/core/keyring"
-	"github.com/josh-silvas/nbot/nlog"
-	"github.com/josh-silvas/nbot/shared/sot"
+	"github.com/josh-silvas/nbot/internal/core"
+	"github.com/josh-silvas/nbot/internal/keyring"
+	"github.com/josh-silvas/nbot/internal/nlog"
+	"github.com/josh-silvas/nbot/pkg/sot"
 )
 
 const pluginName = "info"
