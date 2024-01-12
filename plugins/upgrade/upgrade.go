@@ -32,7 +32,7 @@ type Plugin struct {
 }
 
 // Register : registers the plugin with the parser
-func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+func (p Plugin) Register(c *core.Parser) core.Plugin {
 	p.Log = nlog.NewWithGroup(pluginName)
 	p.C = c.NewCommand(pluginName, "Attempt an upgrade of NBot.")
 	return p

@@ -29,15 +29,18 @@ func (v RequiredValidator) Validate(val reflect.Value) (bool, error) {
 		return false, fmt.Errorf("field value for %s is required but missing", AppName)
 	}
 
+	// nolint:exhaustive
 	switch val.Kind() {
 	case reflect.Ptr, reflect.Map, reflect.Array, reflect.Chan, reflect.Slice:
 		if val.IsNil() {
 			return false, fmt.Errorf("field value for %s is required but missing", AppName)
 		}
+	default:
+		if val.IsZero() {
+			return false, fmt.Errorf("field value for %s is required but missing", AppName)
+		}
 	}
-	if val.IsZero() {
-		return false, fmt.Errorf("field value for %s is required but missing", AppName)
-	}
+
 	return true, nil
 }
 
@@ -47,6 +50,7 @@ type Validator interface {
 	Validate(reflect.Value) (bool, error)
 }
 
+// Validate : Validates the struct fields based on the tag.
 func Validate(data interface{}) []error {
 	errs := make([]error, 0)
 
@@ -68,7 +72,7 @@ func Validate(data interface{}) []error {
 		}
 		// Validate the field
 		if valid, err := val.Validate(v.Field(i)); !valid && err != nil {
-			errs = append(errs, fmt.Errorf("%s %s", v.Type().Field(i).Name, err))
+			errs = append(errs, fmt.Errorf("%s %w", v.Type().Field(i).Name, err))
 		}
 	}
 	return errs

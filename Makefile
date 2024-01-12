@@ -11,6 +11,10 @@ cli: .env
 	@$(RUNNER) bash
 .PHONY: cli
 
+ci: .env ## Build the CI environment.
+	@$(COMPOSE) build --no-cache
+.PHONY: ci
+
 # -------------------------------------------------------------------------------------------
 # RELEASE: Goreleaser release functionality
 # -------------------------------------------------------------------------------------------

@@ -15,6 +15,7 @@ func (e HandleError) Error() string {
 	return fmt.Sprintf("%s: %s", e.Msg, e.Err)
 }
 
+// NewHandleError : create a new error for the Handler
 func NewHandleError(err error, msg ...string) HandleError {
 	return HandleError{Err: err, Msg: msg}
 }

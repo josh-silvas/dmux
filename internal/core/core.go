@@ -25,7 +25,7 @@ type (
 	// It embeds the argparse Parser type.
 	Parser struct {
 		*argparse.Parser
-		Plugins []PluginIfc
+		Plugins []Plugin
 	}
 
 	// PluginBase : base struct for all plugins
@@ -34,8 +34,9 @@ type (
 		Log nlog.Logger
 	}
 
-	PluginIfc interface {
-		Register(*Parser) PluginIfc
+	// Plugin : interface for all plugins
+	Plugin interface {
+		Register(*Parser) Plugin
 		CMD() *argparse.Command
 		Func(keyring.Settings)
 	}
@@ -45,11 +46,11 @@ var debugFlag *bool
 
 // NewParser function will initiate and return the parent parser for the
 // nbot app.
-func NewParser(plugins ...PluginIfc) Parser {
+func NewParser(plugins ...Plugin) Parser {
 	// Create new main parser object
 	p := Parser{
 		Parser:  argparse.NewParser(AppName, "NBot ʘ‿ʘ: Networking CLI."),
-		Plugins: make([]PluginIfc, 0),
+		Plugins: make([]Plugin, 0),
 	}
 
 	// Define the top-level arguments pinned to the nbot parser.

@@ -21,7 +21,8 @@ type Plugin struct {
 	argSe *string
 }
 
-func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+// Register : function will register the plugin with the parser.
+func (p Plugin) Register(c *core.Parser) core.Plugin {
 	p.Log = nlog.NewWithGroup(pluginName)
 	p.C = c.NewCommand(pluginName, "Gathers device information.")
 	p.argD = p.C.StringPositional(&argparse.Options{Required: true, Help: "One of DeviceName, IPAddress, MacAddress"})
@@ -29,10 +30,12 @@ func (p Plugin) Register(c *core.Parser) core.PluginIfc {
 	return p
 }
 
+// CMD : function will return the command for the plugin.
 func (p Plugin) CMD() *argparse.Command {
 	return p.C
 }
 
+// Func : function will be called when the plugin is executed.
 func (p Plugin) Func(cfg keyring.Settings) {
 	// 1. Check that a device has been passed in
 	if strings.TrimSpace(*p.argD) == "" && strings.TrimSpace(*p.argSe) == "" {

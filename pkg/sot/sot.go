@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/josh-silvas/nbot/internal/keyring"
 	"github.com/manifoldco/promptui"
@@ -73,7 +72,7 @@ func New(settings keyring.Settings) (SoT, error) {
 	case "nautobot_v1":
 		nbURL, err := settings.KeyFromSection("nautobot", "url", setSotURL)
 		if err != nil {
-			return nil, fmt.Errorf("settings.KeyFromSection: %s", err)
+			return nil, fmt.Errorf("settings.KeyFromSection: %w", err)
 		}
 		nKey, err := settings.Nautobot()
 		if err != nil {
@@ -83,9 +82,8 @@ func New(settings keyring.Settings) (SoT, error) {
 	case "netbox":
 		nbURL, err := settings.KeyFromSection("netbox", "url", setSotURL)
 		if err != nil {
-			return nil, fmt.Errorf("settings.KeyFromSection: %s", err)
+			return nil, fmt.Errorf("settings.KeyFromSection: %w", err)
 		}
-		spew.Dump(nbURL.String())
 		nKey, err := settings.Netbox()
 		if err != nil {
 			logrus.Fatalf("Netbox(%s)", err)

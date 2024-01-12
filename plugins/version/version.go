@@ -21,17 +21,19 @@ type Plugin struct {
 	core.PluginBase
 }
 
-func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+// Register : registers the plugin with the parser
+func (p Plugin) Register(c *core.Parser) core.Plugin {
 	p.Log = nlog.NewWithGroup(pluginName)
 	p.C = c.NewCommand(pluginName, "display current version")
 	return p
 }
 
+// CMD : function is used to return the command for the plugin
 func (p Plugin) CMD() *argparse.Command {
 	return p.C
 }
 
-// pluginFunc function is executed from the nbot caller
+// Func : function is used to call the plugin function
 func (p Plugin) Func(cfg keyring.Settings) {
 	var storedVer ConfigVersion
 	key, err := FromConfigFile(cfg)

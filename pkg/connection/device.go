@@ -67,7 +67,7 @@ func dnsLookup(s string) net.IP {
 // HostPort : Helper method on the Device struct used to gather the
 // IP Address/SSH port combination for this device.
 func (d Device) HostPort(port string) string {
-	a := d.IP
+	a := d.IP // nolint: typecheck
 	if strings.Contains(a, "/") {
 		a = strings.Split(a, "/")[0]
 	}
@@ -91,7 +91,7 @@ func (d Device) InteractiveShell(user, pass, port string) error {
 	}
 
 	// Set a terminal log for this session.
-	c.SetLog(d.IP)
+	c.SetLog(d.IP) // nolint: typecheck
 
 	// Start ssh shell
 	return c.Shell(session)

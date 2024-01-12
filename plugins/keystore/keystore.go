@@ -20,7 +20,7 @@ type Plugin struct {
 }
 
 // Register : register the plugin with the parser
-func (p Plugin) Register(c *core.Parser) core.PluginIfc {
+func (p Plugin) Register(c *core.Parser) core.Plugin {
 	p.Log = nlog.NewWithGroup(pluginName)
 	p.C = c.NewCommand(pluginName, "Return current keychain data.")
 	p.argR = p.C.String("", "reset", &argparse.Options{Help: "Reset keyring creds by service-name"})

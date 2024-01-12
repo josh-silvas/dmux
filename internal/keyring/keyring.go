@@ -22,7 +22,6 @@ type (
 	// GetOpts : allowed settings for the Get() function in the keyring.
 	GetOpts struct {
 		user             string
-		field            string
 		promptUsr        bool
 		expire           time.Duration
 		promptExp        bool

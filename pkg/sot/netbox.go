@@ -190,7 +190,7 @@ func netBoxDeviceSelect(devices []*models.DeviceWithConfigContext) (models.Devic
 	return models.DeviceWithConfigContext{}, fmt.Errorf("unable to determine device from `%s`", result)
 }
 
-func (n Netbox) consolePort(id int) (models.ConsolePort, error) {
+func (n Netbox) consolePort(id int) (models.ConsolePort, error) { // nolint: unused
 	strID := strconv.Itoa(id)
 	p, err := n.Dcim.DcimConsolePortsList(&dcim.DcimConsolePortsListParams{DeviceID: &strID}, nil)
 	if err != nil {

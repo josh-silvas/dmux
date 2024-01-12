@@ -14,10 +14,14 @@ ARG GOLANGCILINT_VERSION
 
 # Install any additional packages that need to be included in the build container. Since
 # we run yamllint as part of our linting process, it needs to be installed here.
-RUN apk update && apk --no-cache add yamllint make git gcc libc-dev findutils bash curl dbus-x11 gnome-keyring gcc-go openssl python3 openssh-client
+RUN apk update
+RUN apk --no-cache add yamllint make git gcc libc-dev findutils bash curl dbus-x11 gnome-keyring gcc-go openssl python3 openssh-client
 
 # Installs the Python requirements for mkdocs to run.
-RUN python3 -m ensurepip && rm -r /usr/lib/python*/ensurepip && pip3 install --upgrade pip setuptools && pip3 install mkdocs
+RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+RUN python3 -m ensurepip
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install mkdocs
 
 # Install goreleaser from the specified tag in Github.
 RUN wget https://github.com/goreleaser/goreleaser/releases/download/v${GORELEASER_VERSION}/goreleaser_${GORELEASER_VERSION}_x86_64.apk

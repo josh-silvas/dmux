@@ -25,20 +25,20 @@ const (
 func Check(cfg keyring.Settings) error {
 	runningVer, err := SemVer(cfg.Meta["buildVersion"])
 	if err != nil {
-		return fmt.Errorf("version check failed: %s", err)
+		return fmt.Errorf("version check failed: %w", err)
 	}
 
 	key, err := FromConfigFile(cfg)
 	if err != nil {
-		return fmt.Errorf("version check failed: %s", err)
+		return fmt.Errorf("version check failed: %w", err)
 	}
 	storedVer, err := ParseConfigVersion(key.String())
 	if err != nil {
-		return fmt.Errorf("version check failed: %s", err)
+		return fmt.Errorf("version check failed: %w", err)
 	}
 	key.SetValue(ConfigVersion{Version: runningVer, Timestamp: time.Now()}.String())
 	if err = cfg.File.SaveTo(cfg.Source); err != nil {
-		return fmt.Errorf("version check failed: %s", err)
+		return fmt.Errorf("version check failed: %w", err)
 	}
 
 	// Here we are checking if the timestamp on the cached version is more than
@@ -49,7 +49,7 @@ func Check(cfg keyring.Settings) error {
 
 	apiVer, err := FromGitHub()
 	if err != nil {
-		return fmt.Errorf("version check failed: %s", err)
+		return fmt.Errorf("version check failed: %w", err)
 	}
 	if runningVer.LessThan(apiVer) {
 		versionPrint(runningVer, apiVer)

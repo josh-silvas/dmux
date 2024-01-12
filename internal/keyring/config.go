@@ -57,13 +57,13 @@ type Settings struct {
 func CreateIfNotExist(homeDir string) error {
 	path := fmt.Sprintf("%s/%s", homeDir, ConfigPath)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		l.Infof("directory does not exist, creating directory at ", path)
+		l.Infof("directory does not exist, creating directory at %s", path)
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(fmt.Sprintf("%s/%s", path, SettingsFile)); os.IsNotExist(err) {
-		l.Infof("file does not exist, creating file ", SettingsFile, path)
+		l.Infof("file does not exist, creating file %s/%s", SettingsFile, path)
 		file, err := os.Create(fmt.Sprintf("%s/%s", path, SettingsFile))
 		defer func() {
 			if e := file.Close(); e != nil {
