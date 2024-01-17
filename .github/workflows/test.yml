@@ -39,7 +39,8 @@ jobs:
   # Run unit tests
   test:
     name: "NBot Unit Tests"
-    needs: "build"
+    needs:
+      - "golangci-lint"
     runs-on: "ubuntu-latest"
     timeout-minutes: 15
     strategy:
