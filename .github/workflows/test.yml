@@ -50,5 +50,6 @@ jobs:
         with:
           go-version-file: 'go.mod'
           cache: true
+      - name: "Run Unit Tests"
         run: "make _unittest"
         timeout-minutes: 10
