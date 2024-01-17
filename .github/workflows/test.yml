@@ -7,7 +7,7 @@ concurrency:  # Cancel any existing runs of this workflow for this same PR
   cancel-in-progress: true
 
 # This GitHub action runs your tests for each pull request and push.
-on: # yamllint disable-line rule:truthy
+on:  # yamllint disable-line rule:truthy
   pull_request:
     paths-ignore:
       - "README.md"
@@ -39,7 +39,7 @@ jobs:
         uses: "golangci/golangci-lint-action@v3"
         with:
           version: "v1.54"
-          args: "--tests=false --exclude-use-default=false"
+          args: "--out-format=colored-line-number --tests=false --exclude-use-default=false"
   yamllint:
     name: "YAML Lint"
     runs-on: "ubuntu-latest"
