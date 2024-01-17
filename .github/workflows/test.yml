@@ -7,7 +7,7 @@ concurrency:  # Cancel any existing runs of this workflow for this same PR
   cancel-in-progress: true
 
 # This GitHub action runs your tests for each pull request and push.
-on:
+on: # yamllint disable-line rule:truthy
   pull_request:
     paths-ignore:
       - "README.md"
@@ -29,23 +29,23 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: "Git Checkout"
-        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9" # v3.5.3
+        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
       - name: "Setup Go Environment"
-        uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe" # v4.1.0
+        uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
         with:
           go-version-file: "go.mod"
           cache: true
       - name: "Run GolangCI Linting Process"
         uses: "golangci/golangci-lint-action@v3"
         with:
-            version: "v1.54"
-            arguments: "--tests=false --exclude-use-default=false"
+          version: "v1.54"
+          args: "--tests=false --exclude-use-default=false"
   yamllint:
     name: "YAML Lint"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Git Checkout"
-        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9" # v3.5.3
+        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
       - name: "Run YAML Linting Process"
         uses: "karancode/yamllint-github-action@master"
         with:
@@ -63,10 +63,10 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9" # v3.5.3
-      - uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe" # v4.1.0
+      - uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
+      - uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
           cache: true
       - name: "Run Unit Tests"
         run: "make _unittest"
