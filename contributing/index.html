@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/contributing/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Contributing - DMux CLI</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Contributing";
+        var mkdocs_page_input_path = "contributing.md";
+        var mkdocs_page_url = "/contributing/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> DMux CLI
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../usage_guide/">Usage Guide</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Contributing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#creating-your-own-plugin">Creating your own Plugin</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#testing-the-application">Testing the Application</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#running-tests-with-make">Running Tests with Make</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#release-a-new-build">Release a New Build</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#pre-reqs-for-releasing-a-new-build">Pre-Reqs for Releasing a New Build</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#steps-for-releasing-a-new-build">Steps for Releasing a New Build</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#more-help">More help</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../more_help/">More Help</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">DMux CLI</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/josh-silvas/dmux/edit/master/docs/contributing.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h1>
+<p>Contributing to DMux is intended to be as easy as possible. If you have any idea on
+how to make the development workflow better or easier, please submit a PR!</p>
+<p>At a high-level, all development and testing is set up with helper <code>make</code> commands so that
+the experience can be the same across developers. </p>
+<h2 id="creating-your-own-plugin">Creating your own Plugin<a class="headerlink" href="#creating-your-own-plugin" title="Permanent link">&para;</a></h2>
+<p>DMux sub-commands are declared as plugins within the application. Each plugin should
+have an exportable function named <code>Plugin</code> that accepts a <code>*core.Parser</code> argument
+and returns a <code>core.Plugin</code> data type.</p>
+<p>An example framework of a basic plugin would be:</p>
+<pre><code class="language-go">package cool_plugin
+
+import (
+    &quot;fmt&quot;
+    &quot;strings&quot;
+
+    &quot;github.com/akamensky/argparse&quot;
+    &quot;github.com/josh-silvas/dmux/core&quot;
+)
+
+// Arguments are globally defined in the plugin package, so that the
+// invoker of your plugin can overwrite them with user-defined values.
+var arg1 *string
+
+func Plugin(p *core.Parser) core.Plugin {
+    // This is what your main sub-command will be called.
+    cmd := p.NewCommand(&quot;example&quot;, &quot;An example plugin!&quot;)
+
+    // Any additional arguments you would like to add.
+    arg1 = cmd.String(&quot;a&quot;, &quot;some-arg&quot;, &amp;argparse.Options{Help: &quot;Explains what some-arg does.&quot;})
+    return core.Plugin{CMD: cmd, Func: pluginFunc}
+}
+
+func pluginFunc(cfg keyring.Settings) {
+    // Within your `pluginFunc` is where all of the custom code will live 
+    // for your plugin. 
+
+    // When the command is invoked, this function will be called. 
+    // NOTE: The `cfg keyring.Settings` argument that your pluginFunc will be passed,
+    //       will give you the ability to access credentials stored in the DMux Keychain.
+
+    // Example fetching the Nautobot api key from the DMux keychain:
+    nKey, err := cfg.Nautobot()
+}
+</code></pre>
+<blockquote>
+<p>NOTE: All plugins are stored in the <code>plugins</code> directory.</p>
+</blockquote>
+<p>Once your plugin is created, add it to the main parser in
+<a href="cmd/main.go">cmd/main.go</a>, for example:</p>
+<pre><code class="language-go">    // Add your plugin to this list, alphabetically please!!
+    parser := core.NewParser(
+        ansible.Plugin,
+        console.Plugin,
+        keystore.Plugin,
+        libre.Plugin,
+        info.Plugin,
+        sshinteractive.Plugin,
+        version.Plugin,
+    )
+</code></pre>
+<h2 id="testing-the-application">Testing the Application<a class="headerlink" href="#testing-the-application" title="Permanent link">&para;</a></h2>
+<p>All testing and linting for DMux are done in a development docker container so that we
+may produce similar results across development environments.</p>
+<p>When you run a <code>make</code> command, this repo will spin up the docker container as defined
+in the <code>development/Dockerfile</code> with all the packages you need to run linting and unit-testing.</p>
+<h3 id="running-tests-with-make">Running Tests with Make<a class="headerlink" href="#running-tests-with-make" title="Permanent link">&para;</a></h3>
+<p>Each <code>make</code> command will run within the development container. If you would like
+to run them outside of the development container. Run the command with a prepended 
+underscore (<code>_</code>), for example, <code>make _lint</code></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make tests</code></td>
+<td>Run all testing frameworks (same as CI pipeline).</td>
+</tr>
+<tr>
+<td><code>make lint</code></td>
+<td>Only run linting tests like golangci-lint and yamllint.</td>
+</tr>
+<tr>
+<td><code>make unittest</code></td>
+<td>Only run unit-testing. Runs for entire repository.</td>
+</tr>
+<tr>
+<td><code>make build</code></td>
+<td>Rebuild the development container. If dependencies change.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="release-a-new-build">Release a New Build<a class="headerlink" href="#release-a-new-build" title="Permanent link">&para;</a></h2>
+<p>The <code>version</code> plugin in DMux will periodically make a call-out to Artifactory to 
+determine if a newer release has been published. If so, the users will get a notification
+to upgrade with the upgrade steps, depending on their architecture. </p>
+<p>To draft a new DMux release, you only need to publish the release on Github and Artifactory, and the 
+users will update at their leisure. </p>
+<h3 id="pre-reqs-for-releasing-a-new-build">Pre-Reqs for Releasing a New Build<a class="headerlink" href="#pre-reqs-for-releasing-a-new-build" title="Permanent link">&para;</a></h3>
+<p>Before you can release a new build, goreleaser needs credentials to the 
+systems that it's going to communicate with to publish a new release. </p>
+<p>Please make sure you have the following defined</p>
+<ol>
+<li>Github token with release permissions to <a href="https://github.com/josh-silvas/dmux">github.com/josh-silvas/dmux</a>.</li>
+<li>Store the token in <code>~/.config/goreleaser/github_token</code></li>
+</ol>
+<h3 id="steps-for-releasing-a-new-build">Steps for Releasing a New Build<a class="headerlink" href="#steps-for-releasing-a-new-build" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Building of the Go binary </li>
+<li>Debian build for Linux installations</li>
+<li>Brew build for OSX installations (this includes the formula.rb generation)</li>
+<li>Archive build of tar.gz files</li>
+<li>Drafting of a new release in <a href="https://github.com/josh-silvas/dmux/releases">GitHub</a>.</li>
+</ol>
+<p>Once you have completed the prereqs, you should be able to draft a new release using make:</p>
+<pre><code>make release
+</code></pre>
+<blockquote>
+<p>Note: this requires a clean git status and a new git tag.  If you are wanting to test this release, run </p>
+</blockquote>
+<pre><code>make test_release
+</code></pre>
+<h2 id="more-help">More help<a class="headerlink" href="#more-help" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Send an email to <a href="mailto:josh@jsilvas.com">Josh Silvas</a></p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../usage_guide/" class="btn btn-neutral float-left" title="Usage Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../more_help/" class="btn btn-neutral float-right" title="More Help">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/josh-silvas/dmux/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../usage_guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../more_help/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

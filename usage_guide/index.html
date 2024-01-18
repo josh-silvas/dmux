@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/usage_guide/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Usage Guide - DMux CLI</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Usage Guide";
+        var mkdocs_page_input_path = "usage_guide.md";
+        var mkdocs_page_url = "/usage_guide/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> DMux CLI
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installing</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Usage Guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#keystore">Keystore</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#info">Info</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ssh">SSH</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#version">Version</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../more_help/">More Help</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">DMux CLI</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Usage Guide</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/josh-silvas/dmux/edit/master/docs/usage_guide.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="usage-guide">Usage Guide<a class="headerlink" href="#usage-guide" title="Permanent link">&para;</a></h1>
+<p>DMux uses a custom framework model where the core Go code focuses on system functionality,
+whereas the <code>plugin</code> system offers a wide variety of sub-commands that utilize the core framework.</p>
+<h3 id="keystore">Keystore<a class="headerlink" href="#keystore" title="Permanent link">&para;</a></h3>
+<p>The <code>keystore</code> command that allows users to interact with the system keyring that DMux
+uses to house credentials. You can use <code>keystore</code> to <code>--reset</code> existing credentials
+or to <code>--view</code> one of your credentials.</p>
+<pre><code>Arguments:
+
+  -h  --help   Print help information
+      --reset  Reset keyring creds: [neteng-awx,nautobot,librenms,radius]
+      --view   Reset keyring creds: [neteng-awx,nautobot,librenms,radius]
+</code></pre>
+<p><strong>Command Usage</strong></p>
+<ul>
+<li><code>dmux keystore --view nautobot</code></li>
+<li><code>dmux keystore --reset nautobot</code></li>
+</ul>
+<h3 id="info">Info<a class="headerlink" href="#info" title="Permanent link">&para;</a></h3>
+<p>The <code>info</code> command is a useful command to gather information about a device or
+resource from systems. </p>
+<pre><code>Arguments:
+
+  positional-arg               One of DeviceName, IPAddress, DeviceID
+  -h  --help                   Print help information
+  -t  --tag                    Devices with a tag
+  -s  --site                   Devices within a given site name.
+  -m  --mac-address            Devices within a given mac-address.
+      --serial                 Devices by serial number.
+</code></pre>
+<p><strong>Command Usage</strong></p>
+<ul>
+<li><code>dmux info &lt;device_id&gt;</code></li>
+<li><code>dmux info &lt;device_name&gt;</code></li>
+<li><code>dmux info &lt;device_ip_address&gt;</code></li>
+<li><code>dmux info --serial &lt;serial_number&gt;</code></li>
+</ul>
+<h3 id="ssh">SSH<a class="headerlink" href="#ssh" title="Permanent link">&para;</a></h3>
+<p>The <code>ssh</code> command provides an easy helper when connecting to network devices via ssh.
+Since DMux handles credentials via the system keyring service, it can also handle 
+setting up your ssh session and logging into the device. </p>
+<pre><code>Arguments:
+
+  positional-arg              One of DeviceName, IPAddress, DeviceID
+  -h  --help                  Print help information
+  -p  --port                  SSH port to use. Default: 22. Default: 22
+</code></pre>
+<p><strong>Command Usage</strong></p>
+<ul>
+<li><code>dmux ssh &lt;device_id&gt;</code></li>
+<li><code>dmux ssh &lt;device_name&gt;</code></li>
+<li><code>dmux ssh &lt;device_ip_address&gt;</code></li>
+<li><code>dmux ssh &lt;device_name&gt; --port 2022</code></li>
+</ul>
+<h3 id="version">Version<a class="headerlink" href="#version" title="Permanent link">&para;</a></h3>
+<p>The <code>version</code> command is core functionality to DMux and is used to display details
+about the DMux installation.</p>
+<p><strong>Command Usage</strong></p>
+<ul>
+<li><code>dmux version</code></li>
+</ul>
+<pre><code>DMux Version: v0.2.1
+ ° Runtime: darwin_amd64
+ ° Version Checked At: 2022-09-02 13:54:20 -0500 CDT
+ ° Next Version Check At: 2022-09-03 13:54:20 -0500 CDT
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../contributing/" class="btn btn-neutral float-right" title="Contributing">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/josh-silvas/dmux/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../contributing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
