@@ -58,8 +58,6 @@ nfpms:
 
 builds:
   - id: "dmux-osx-amd64"
-    goos:
-      - "darwin"
     targets:
       - "darwin_amd64"
     main: "cmd/main.go"
@@ -69,8 +67,6 @@ builds:
       - "CGO_ENABLED=1"
 
   - id: "dmux-osx-arm64"
-    goos:
-      - "darwin"
     targets:
       - "darwin_arm64"
     main: "cmd/main.go"
@@ -80,8 +76,6 @@ builds:
       - "CGO_ENABLED=1"
 
   - id: "dmux-linux-amd64"
-    goos:
-      - "linux"
     targets:
       - "linux_amd64"
     main: "cmd/main.go"
@@ -93,8 +87,6 @@ builds:
       - "CGO_ENABLED=1"
 
   - id: "dmux-windows-amd64"
-    goos:
-      - "windows"
     targets:
       - "windows_amd64"
     main: "cmd/main.go"
