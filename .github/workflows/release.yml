@@ -1,0 +1,35 @@
+---
+# DMux CI goreleaser release workflow.
+name: "Release"
+
+concurrency:  # Cancel any existing runs of this workflow for this same PR
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: "write"
+
+jobs:
+  goreleaser:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout Repository"
+        uses: "actions/checkout@v4"
+        with:
+          fetch-depth: 0
+      - name: "Setup Golang"
+        uses: "actions/setup-go@v4"
+      - name: "Run GoReleaser"
+        uses: "goreleaser/goreleaser-action@v5"
+        with:
+          # One of 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: "goreleaser"
+          version: "latest"
+          args: "release --clean"
+        env:
+          GITHUB_TOKEN: ${{ secrets.AUTHENTICATION_TOKEN }}
