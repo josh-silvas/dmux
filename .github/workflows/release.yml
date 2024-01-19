@@ -6,10 +6,10 @@ concurrency:  # Cancel any existing runs of this workflow for this same PR
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     tags:
-      - '*'
+      - "*"
 
 permissions:
   contents: "write"
@@ -32,4 +32,4 @@ jobs:
           version: "latest"
           args: "release --clean"
         env:
-          GITHUB_TOKEN: ${{ secrets.AUTHENTICATION_TOKEN }}
+          GITHUB_TOKEN: "${{ secrets.AUTHENTICATION_TOKEN }}"
