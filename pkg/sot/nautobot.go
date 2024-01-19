@@ -291,18 +291,16 @@ func (n NautobotV2) getDevice(params *url.Values) (Device, error) {
 	if len(d) == 0 {
 		return Device{}, fmt.Errorf("unable to find NautobotV2 device for `%v`", params)
 	}
-	ip := &nautobot.IPAddress{}
 	switch {
 	case d[0].PrimaryIP != nil:
-		ip = d[0].PrimaryIP
+		break
 	case d[0].PrimaryIP4 != nil:
-		ip = d[0].PrimaryIP4
+		d[0].PrimaryIP = d[0].PrimaryIP4
 	case d[0].PrimaryIP6 != nil:
-		ip = d[0].PrimaryIP6
+		d[0].PrimaryIP = d[0].PrimaryIP6
 	default:
 		return Device{}, fmt.Errorf("`%v` does not have a primary IP assigned in NautobotV2", params)
 	}
-	d[0].PrimaryIP = ip
 
 	// 5. Finally, return the device.
 	return nbDeviceToSotDevice(&n.Client, d[0]), nil
