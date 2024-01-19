@@ -11,8 +11,8 @@ or to `--view` one of your credentials.
 Arguments:
 
   -h  --help   Print help information
-      --reset  Reset keyring creds: [neteng-awx,nautobot,librenms,radius]
-      --view   Reset keyring creds: [neteng-awx,nautobot,librenms,radius]
+      --reset  Reset keyring creds: [nautobot_v1,netbox]
+      --view   Reset keyring creds: [nautobot_v1,netbox]
 ```
 
 **Command Usage**

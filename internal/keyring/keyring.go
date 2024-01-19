@@ -124,7 +124,7 @@ func (s *Settings) UserPassCustom(username string) (key Credential, err error) {
 }
 
 // Get : Method on the setting to fetch a credential. Takes a service name, such as
-// `netbox` or `radius`. Pass in the `hasUser=true` if the credential stores a username
+// `netbox`. Pass in the `hasUser=true` if the credential stores a username
 // as well as a password/api key.
 func (s *Settings) Get(service string, opts ...Option) (key Credential, err error) {
 	var (

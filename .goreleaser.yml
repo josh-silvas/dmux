@@ -48,7 +48,7 @@ nfpms:
     vendor: "Josh Silvas"
     homepage: "https://github.com/josh-silvas/dmux"
     maintainer: "Josh Silvas <josh@jsilvas.com>"
-    description: "DMux is a Nautobot cli tool with ssh functionality for assist Network Engineering teams."
+    description: "DMux is a cli tool with ssh functionality for assist Network Engineering teams."
     license: "Apache 2.0"
     formats:
       - "deb"

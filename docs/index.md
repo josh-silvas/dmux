@@ -1,4 +1,4 @@
-# DMux : Nautobot CLI Tool
+# DMux : NetEng CLI Tool
 * [Summary](#summary)
 * [Installation](#installing)
 * [Usage Guide](#usage-guide)
@@ -6,8 +6,8 @@
 * [More Help](#more-help)
 
 ## Summary
-DMux is Nautobot specific CLI tool that allows you to interact with Nautobot via the command line.
-In addition to Nautobot interactions, DMux also provides a set of tools to help with day-to-day, including an underlying ssh
+DMux is a CLI tool that allows you to interact with Nautobot, NetBox, and potentially any SoT via the command line.
+In addition to SoT interactions, DMux also provides a set of tools to help with day-to-day, including an underlying ssh
 library that allows you to interact with devices via the command line.
 
 Contributions to DMux are extremely welcomed. To contribute, check out our  
