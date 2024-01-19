@@ -37,14 +37,15 @@ brews:
 
 nfpms:
   - id: "dmux"
-    file_name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    file_name_template: >-
+      {{- .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     builds:
       - "dmux-linux-amd64"
-    replacements:
-      amd64: "64-bit"
-      386: "32-bit"
-      darwin: "macOS"
-      linux: "Linux"
     vendor: "Josh Silvas"
     homepage: "https://github.com/josh-silvas/dmux"
     maintainer: "Josh Silvas <josh@jsilvas.com>"
@@ -103,13 +104,13 @@ builds:
       - "CGO_ENABLED=1"
 
 archives:
-  - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
-    replacements:
-      386: "i386"
-      amd64: "x86_64"
-      darwin: "Darwin"
-      linux: "Linux"
-      windows: "Windows"
+  - name_template: >-
+      {{- .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     format: "tar.gz"
     files:
       - "LICENSE*"
