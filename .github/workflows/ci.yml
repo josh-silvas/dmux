@@ -1,6 +1,6 @@
 ---
 # DMux CI testing workflow.
-name: "DMux Github Actions CI"
+name: "Github Actions CI"
 
 concurrency:  # Cancel any existing runs of this workflow for this same PR
   group: "${{ github.workflow }}-${{ github.ref }}"
