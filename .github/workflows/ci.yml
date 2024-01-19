@@ -94,7 +94,7 @@ jobs:
           fetch-depth: 0
       - name: "Setup Golang"
         uses: "actions/setup-go@v4"
-      - name: "Run GoReleaser"
+      - name: "Run GoReleaser Release"
         uses: "goreleaser/goreleaser-action@v5"
         with:
           # One of 'goreleaser' (default) or 'goreleaser-pro'
