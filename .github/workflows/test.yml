@@ -8,6 +8,7 @@ concurrency:  # Cancel any existing runs of this workflow for this same PR
 
 # This GitHub action runs your tests for each pull request and push.
 on:  # yamllint disable-line rule:truthy
+  workflow_call:
   pull_request:
     paths-ignore:
       - "README.md"
