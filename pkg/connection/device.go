@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/josh-silvas/nbot/pkg/sot"
+	"github.com/josh-silvas/dmux/pkg/sot"
 	"github.com/sirupsen/logrus"
 )
 
@@ -14,7 +14,7 @@ type Device struct {
 	sot.Device
 }
 
-// NewDevice : Helper method to fetch a device from Nautobot using a
+// NewDevice : Helper method to fetch a device from NautobotV1 using a
 // set of different methods, explained below.
 func NewDevice(c sot.SoT, arg string) (Device, error) {
 	// 1. Check if the value passed in is a valid IPv4 address. If
@@ -38,7 +38,7 @@ func NewDevice(c sot.SoT, arg string) (Device, error) {
 	}
 
 	// 3. Finally, attempt to fetch the device by a partial case-insensitive
-	//    device name match in Nautobot.
+	//    device name match in NautobotV1.
 	device, err := c.GetDevice(sot.ByName, arg)
 	if err != nil {
 		return Device{}, err

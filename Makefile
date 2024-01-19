@@ -1,5 +1,5 @@
 REPO ?= github.com/josh-silvas
-PROJECT_NAME ?= nbot
+PROJECT_NAME ?= dmux
 VERSION := $(shell cat VERSION)
 COMPOSE := docker-compose --project-name $(PROJECT_NAME) --project-directory "development"  -f "development/docker-compose.yml"
 RUNNER := $(COMPOSE) run --rm $(PROJECT_NAME)-build

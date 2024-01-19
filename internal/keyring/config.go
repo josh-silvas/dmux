@@ -14,24 +14,24 @@ import (
 )
 
 const (
-	// ConfigPath : Base directory for NBot specific files.
-	ConfigPath = ".config/nbot"
+	// ConfigPath : Base directory for DMux specific files.
+	ConfigPath = ".config/dmux"
 
 	// SettingsFile : Name of the file in the ConfigPath directory that contains
-	// nbot settings.
+	// dmux settings.
 	SettingsFile = "settings.ini"
 
 	// KeyChainName declares a separate keychain as to separate from other keychains
 	// that could possibly sync to iCloud or other devices. This keychain will not be able
 	// to synchronize
-	KeyChainName = "NBot-Keyring"
+	KeyChainName = "DMux-Keyring"
 
 	// Split : Special set of characters to act as a delimiter between
 	// the user and password.
 	Split = "!***!"
 
 	// SvcBase : The base string to identify a service in the keyring.
-	SvcBase = "com.keyring.nbot"
+	SvcBase = "com.keyring.dmux"
 
 	fileBackend = "~/.local/share/keyrings/"
 
@@ -130,7 +130,7 @@ func (s *Settings) KeyFromSection(section, key string, def func() (string, error
 		if err != nil {
 			return nil, err
 		}
-		value.Comment = fmt.Sprintf("Local value for %s->%s stored in NBot's settings.ini file.", section, key)
+		value.Comment = fmt.Sprintf("Local value for %s->%s stored in DMux's settings.ini file.", section, key)
 		if err := s.File.SaveTo(s.Source); err != nil {
 			return nil, err
 		}

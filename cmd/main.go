@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/josh-silvas/nbot/internal/core"
-	"github.com/josh-silvas/nbot/internal/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
-	"github.com/josh-silvas/nbot/plugins/info"
-	"github.com/josh-silvas/nbot/plugins/keystore"
-	sshinteractive "github.com/josh-silvas/nbot/plugins/ssh"
-	"github.com/josh-silvas/nbot/plugins/upgrade"
-	"github.com/josh-silvas/nbot/plugins/version"
+	"github.com/josh-silvas/dmux/internal/core"
+	"github.com/josh-silvas/dmux/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/nlog"
+	"github.com/josh-silvas/dmux/plugins/info"
+	"github.com/josh-silvas/dmux/plugins/keystore"
+	sshinteractive "github.com/josh-silvas/dmux/plugins/ssh"
+	"github.com/josh-silvas/dmux/plugins/upgrade"
+	"github.com/josh-silvas/dmux/plugins/version"
 )
 
 var (
@@ -30,10 +30,10 @@ func main() {
 	)
 
 	// Get the keyring configuration file from the
-	// default store location (homedir/.config/nbot)
+	// default store location (homedir/.config/dmux)
 	cfg, err := keyring.New(l)
 	if err != nil {
-		l.Fatalf("nbot.keyring.New:%s", err)
+		l.Fatalf("dmux.keyring.New:%s", err)
 	}
 	cfg.Meta = map[string]string{
 		"buildVersion": buildVersion,
@@ -45,7 +45,7 @@ func main() {
 		l.Warn(err)
 	}
 
-	// Run the parser to parse all the arguments defined by nbot and
+	// Run the parser to parse all the arguments defined by dmux and
 	// the additional plugins. This will also check if and what argument happened
 	// and execute the defined plugin function.
 	parser.Run(cfg)

@@ -1,12 +1,12 @@
 # Contributing
-Contributing to NBot is intended to be as easy as possible. If you have any idea on
+Contributing to DMux is intended to be as easy as possible. If you have any idea on
 how to make the development workflow better or easier, please submit a PR!
 
 At a high-level, all development and testing is set up with helper `make` commands so that
 the experience can be the same across developers. 
 
 ## Creating your own Plugin
-NBot sub-commands are declared as plugins within the application. Each plugin should
+DMux sub-commands are declared as plugins within the application. Each plugin should
 have an exportable function named `Plugin` that accepts a `*core.Parser` argument
 and returns a `core.Plugin` data type.
 
@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	"github.com/akamensky/argparse"
-	"github.com/josh-silvas/nbot/core"
+	"github.com/josh-silvas/dmux/core"
 )
 
 // Arguments are globally defined in the plugin package, so that the
@@ -41,9 +41,9 @@ func pluginFunc(cfg keyring.Settings) {
 	
 	// When the command is invoked, this function will be called. 
 	// NOTE: The `cfg keyring.Settings` argument that your pluginFunc will be passed,
-	//       will give you the ability to access credentials stored in the NBot Keychain.
+	//       will give you the ability to access credentials stored in the DMux Keychain.
 	
-	// Example fetching the Nautobot api key from the NBot keychain:
+	// Example fetching the Nautobot api key from the DMux keychain:
 	nKey, err := cfg.Nautobot()
 }
 ```
@@ -65,7 +65,7 @@ Once your plugin is created, add it to the main parser in
 ```
 
 ## Testing the Application 
-All testing and linting for NBot are done in a development docker container so that we
+All testing and linting for DMux are done in a development docker container so that we
 may produce similar results across development environments.
 
 When you run a `make` command, this repo will spin up the docker container as defined
@@ -84,11 +84,11 @@ underscore (`_`), for example, `make _lint`
 | `make build`    | Rebuild the development container. If dependencies change. |
     
 ## Release a New Build
-The `version` plugin in NBot will periodically make a call-out to Artifactory to 
+The `version` plugin in DMux will periodically make a call-out to Artifactory to 
 determine if a newer release has been published. If so, the users will get a notification
 to upgrade with the upgrade steps, depending on their architecture. 
 
-To draft a new NBot release, you only need to publish the release on Github and Artifactory, and the 
+To draft a new DMux release, you only need to publish the release on Github and Artifactory, and the 
 users will update at their leisure. 
 
 ### Pre-Reqs for Releasing a New Build
@@ -97,7 +97,7 @@ systems that it's going to communicate with to publish a new release.
 
 Please make sure you have the following defined
 
-1. Github token with release permissions to [github.com/josh-silvas/nbot](https://github.com/josh-silvas/nbot).
+1. Github token with release permissions to [github.com/josh-silvas/dmux](https://github.com/josh-silvas/dmux).
    * Store the token in `~/.config/goreleaser/github_token`
 
 
@@ -106,7 +106,7 @@ Please make sure you have the following defined
 2. Debian build for Linux installations
 3. Brew build for OSX installations (this includes the formula.rb generation)
 4. Archive build of tar.gz files
-5. Drafting of a new release in [GitHub](https://github.com/josh-silvas/nbot/releases).
+5. Drafting of a new release in [GitHub](https://github.com/josh-silvas/dmux/releases).
 
 Once you have completed the prereqs, you should be able to draft a new release using make:
 ```

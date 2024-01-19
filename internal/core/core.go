@@ -1,4 +1,4 @@
-// Package core contains the core functionality of nbot and initializes the default
+// Package core contains the core functionality of dmux and initializes the default
 // parser.
 package core
 
@@ -10,18 +10,18 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/internal/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
+	"github.com/josh-silvas/dmux/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/nlog"
 )
 
 const (
-	// AppName is a constant for nbot so that we can be consistent on the
+	// AppName is a constant for dmux so that we can be consistent on the
 	// naming across all uses of the name.
-	AppName = "nbot"
+	AppName = "dmux"
 )
 
 type (
-	// Parser type is used as the main parser for nbot.
+	// Parser type is used as the main parser for dmux.
 	// It embeds the argparse Parser type.
 	Parser struct {
 		*argparse.Parser
@@ -45,15 +45,15 @@ type (
 var debugFlag *bool
 
 // NewParser function will initiate and return the parent parser for the
-// nbot app.
+// dmux app.
 func NewParser(plugins ...Plugin) Parser {
 	// Create new main parser object
 	p := Parser{
-		Parser:  argparse.NewParser(AppName, "NBot ʘ‿ʘ: Networking CLI."),
+		Parser:  argparse.NewParser(AppName, "DMux ʘ‿ʘ: Networking CLI."),
 		Plugins: make([]Plugin, 0),
 	}
 
-	// Define the top-level arguments pinned to the nbot parser.
+	// Define the top-level arguments pinned to the dmux parser.
 	debugFlag = p.Flag("", "debug", &argparse.Options{Help: "view debug level logging"})
 
 	// Register the plugin commands into the parser

@@ -7,7 +7,7 @@ import (
 )
 
 func Test_setCredential(t *testing.T) {
-	c, err := testCfg.SetCredential(testCred.Username, testCred.Password(), "com.keyring.nbot.test", testCred.Expire)
+	c, err := testCfg.SetCredential(testCred.Username, testCred.Password(), "com.keyring.dmux.test", testCred.Expire)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17,7 +17,7 @@ func Test_setCredential(t *testing.T) {
 }
 
 func Test_getCredential(t *testing.T) {
-	c, err := testCfg.GetCredential(testCred.Username, "com.keyring.nbot.test")
+	c, err := testCfg.GetCredential(testCred.Username, "com.keyring.dmux.test")
 	if err != nil {
 		t.Fatal(err)
 	}

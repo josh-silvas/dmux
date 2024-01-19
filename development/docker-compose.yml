@@ -9,14 +9,14 @@ x-build: &build
       GO_VERSION: "${GO_VERSION:-1.21.5}"
       GORELEASER_VERSION: "${GORELEASER_VERSION:-0.18.1}"
       GOLANGCILINT_VERSION: "${GOLANGCILINT_VERSION:-1.51.2}"
-  image: "josh-silvas/nbot-build:latest"
+  image: "josh-silvas/dmux-build:latest"
 
 services:
-  nbot-build:
+  dmux-build:
     <<: *build
     env_file:
       - ".env"
     volumes:
       - "../:/workdir"
-      - "./settings.ini:/root/.config/nbot/settings.ini"
+      - "./settings.ini:/root/.config/dmux/settings.ini"
     tty: true

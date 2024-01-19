@@ -10,8 +10,8 @@ import (
 	"github.com/go-ini/ini"
 	"github.com/google/go-github/github"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/internal/core"
-	"github.com/josh-silvas/nbot/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/core"
+	"github.com/josh-silvas/dmux/internal/keyring"
 
 	"github.com/Masterminds/semver"
 )
@@ -21,7 +21,7 @@ const (
 	owner         = "josh-silvas"
 )
 
-// Check function is executed from the nbot caller
+// Check function is executed from the dmux caller
 func Check(cfg keyring.Settings) error {
 	runningVer, err := SemVer(cfg.Meta["buildVersion"])
 	if err != nil {
@@ -92,11 +92,11 @@ func FromGitHub() (*semver.Version, error) {
 
 // FromConfigFile : From gokeys.Settings type to open the config file and retrieve the cached version.
 func FromConfigFile(cfg keyring.Settings) (*ini.Key, error) {
-	sec, err := cfg.File.GetSection("nbot")
+	sec, err := cfg.File.GetSection("dmux")
 	// If there is an error retrieving the section, it likely is not created yet.
 	// attempt to create the section
 	if err != nil {
-		sec, err = cfg.File.NewSection("nbot")
+		sec, err = cfg.File.NewSection("dmux")
 		if err != nil {
 			return nil, err
 		}
@@ -108,7 +108,7 @@ func FromConfigFile(cfg keyring.Settings) (*ini.Key, error) {
 		if err != nil {
 			return nil, err
 		}
-		key.Comment = "local cache of the nbot version, really for the timestamp"
+		key.Comment = "local cache of the dmux version, really for the timestamp"
 	}
 	return key, nil
 }
@@ -165,16 +165,16 @@ func SemVer(s string) (*semver.Version, error) {
 // versionPrint is used to print info to terminal if the user needs to be notified of a new or different running version
 func versionPrint(running, current *semver.Version) {
 	fmt.Println(text.FgHiCyan.Sprintf("Upgrade available (%s running, %s available). Install with:", running, current))
-	fmt.Println(text.FgYellow.Sprintf("   >> nbot upgrade"))
+	fmt.Println(text.FgYellow.Sprintf("   >> dmux upgrade"))
 	fmt.Println(text.FgYellow.Sprintf("   >> - OR - "))
 	switch runtime.GOOS {
 	case "linux":
-		fmt.Println(text.FgHiYellow.Sprintf("   >> curl -O https://github.com/josh-silvas/nbot/releases/%s/nbot_64-bit.deb "+
-			"&& sudo dpkg -i nbot_64-bit.deb", current.String()))
+		fmt.Println(text.FgHiYellow.Sprintf("   >> curl -O https://github.com/josh-silvas/dmux/releases/%s/dmux_64-bit.deb "+
+			"&& sudo dpkg -i dmux_64-bit.deb", current.String()))
 	case "darwin":
-		fmt.Println(text.FgYellow.Sprintf("   >> brew update && brew upgrade nbot"))
+		fmt.Println(text.FgYellow.Sprintf("   >> brew update && brew upgrade dmux"))
 	default:
-		fmt.Println(text.FgYellow.Sprintf("Unknown OS, check https://github.com/josh-silvas/nbot for install options"))
+		fmt.Println(text.FgYellow.Sprintf("Unknown OS, check https://github.com/josh-silvas/dmux for install options"))
 	}
 	fmt.Println(text.FgYellow.Sprintf("You will be notified in %d hours if you have not upgraded.", checkInterval))
 }

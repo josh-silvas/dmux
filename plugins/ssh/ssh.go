@@ -6,11 +6,11 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/internal/core"
-	"github.com/josh-silvas/nbot/internal/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
-	"github.com/josh-silvas/nbot/pkg/connection"
-	"github.com/josh-silvas/nbot/pkg/sot"
+	"github.com/josh-silvas/dmux/internal/core"
+	"github.com/josh-silvas/dmux/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/nlog"
+	"github.com/josh-silvas/dmux/pkg/connection"
+	"github.com/josh-silvas/dmux/pkg/sot"
 )
 
 const pluginName = "ssh"
@@ -44,7 +44,7 @@ func (p Plugin) CMD() *argparse.Command {
 func (p Plugin) Func(cfg keyring.Settings) {
 	// 1. Check that a device has been passed in
 	if strings.TrimSpace(*p.argD) == "" {
-		p.Log.Fatal("A device must be specified! `nbot ssh [DeviceName, IPAddress, DeviceID]`")
+		p.Log.Fatal("A device must be specified! `dmux ssh [DeviceName, IPAddress, DeviceID]`")
 	}
 
 	rKey, err := cfg.DeviceAuth()

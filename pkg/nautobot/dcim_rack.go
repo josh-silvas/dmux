@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 // Rack : Type definition for a Nautobot Rack
 type Rack struct {

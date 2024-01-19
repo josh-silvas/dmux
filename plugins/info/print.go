@@ -7,12 +7,12 @@ import (
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/pkg/sot"
+	"github.com/josh-silvas/dmux/pkg/sot"
 )
 
 const noResult = "No results found in the backend SoT"
 
-// EmptyTable func will render a table with a single row that says "Query did not match any results in Nautobot"
+// EmptyTable func will render a table with a single row that says "Query did not match any results in NautobotV1"
 func EmptyTable() {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)

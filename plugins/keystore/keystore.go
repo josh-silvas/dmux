@@ -5,9 +5,9 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/josh-silvas/nbot/internal/core"
-	"github.com/josh-silvas/nbot/internal/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
+	"github.com/josh-silvas/dmux/internal/core"
+	"github.com/josh-silvas/dmux/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/nlog"
 )
 
 const pluginName = "keystore"
@@ -33,7 +33,7 @@ func (p Plugin) CMD() *argparse.Command {
 	return p.C
 }
 
-// Func : pluginFunc function is executed from the nbot caller
+// Func : pluginFunc function is executed from the dmux caller
 func (p Plugin) Func(cfg keyring.Settings) {
 	if *p.argR != "" {
 		if err := cfg.Delete(*p.argR); err != nil {

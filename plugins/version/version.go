@@ -1,4 +1,4 @@
-// Package version is the version management logic for nbot to make sure we are
+// Package version is the version management logic for dmux to make sure we are
 // able to manage the version releases.
 package version
 
@@ -9,9 +9,9 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/internal/core"
-	"github.com/josh-silvas/nbot/internal/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
+	"github.com/josh-silvas/dmux/internal/core"
+	"github.com/josh-silvas/dmux/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/nlog"
 )
 
 const pluginName = "version"
@@ -42,7 +42,7 @@ func (p Plugin) Func(cfg keyring.Settings) {
 			p.Log.Errorf("ParseConfigVersion(%s)", err)
 		}
 	}
-	fmt.Println(text.FgGreen.Sprintf("NBot: v%s", storedVer.Version.String()))
+	fmt.Println(text.FgGreen.Sprintf("DMux: v%s", storedVer.Version.String()))
 	fmt.Println(text.FgGreen.Sprintf(" ° Runtime: %s_%s", runtime.GOOS, runtime.GOARCH))
 	fmt.Println(text.FgGreen.Sprintf(" ° Version Checked At: %s", storedVer.Timestamp.String()))
 	fmt.Println(text.FgGreen.Sprintf(" ° Next Version Check At: %s\n", storedVer.Timestamp.Add(checkInterval*time.Hour)))

@@ -23,13 +23,13 @@ var (
 func TestMain(m *testing.M) {
 	var err error
 	if testCfg, err = testNew(); err != nil {
-		logrus.Fatalf("nbot.keyring.New:%s", err)
+		logrus.Fatalf("dmux.keyring.New:%s", err)
 	}
 	os.Exit(m.Run())
 }
 
 func testNew() (s Settings, err error) {
-	keyName := "com.keyring.nbot.test"
+	keyName := "com.keyring.dmux.test"
 	userProfile, err = user.Current()
 	if err != nil {
 		return s, fmt.Errorf("testNew:%w", err)

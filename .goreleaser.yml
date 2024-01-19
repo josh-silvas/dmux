@@ -1,54 +1,54 @@
 ---
-project_name: "nbot"
+project_name: "dmux"
 
 release:
   github:
     owner: "josh-silvas"
-    name: "nbot"
+    name: "dmux"
   name_template: "{{ .Tag }}"
 
 brews:
-  - name: "nbot"
+  - name: "dmux"
     commit_author:
       name: "Josh Silvas"
       email: "josh@jsilvas.com"
     tap:
       owner: "josh-silvas"
-      name: "nbot"
+      name: "dmux"
     folder: "Formula"
-    url_template: "https://github.com/josh-silvas/nbot/releases/{{ .ProjectName }}/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/josh-silvas/dmux/releases/{{ .ProjectName }}/{{ .Tag }}/{{ .ArtifactName }}"
     caveats: |
-      NBot v{{ .Tag }} Notes:
-        1. NBot will create it's own system keychain called 'NBot-Keyring'
-          1a. You may need to reauthenticate nbot to this keychain after update because the binary is
+      DMux v{{ .Tag }} Notes:
+        1. DMux will create it's own system keychain called 'DMux-Keyring'
+          1a. You may need to reauthenticate dmux to this keychain after update because the binary is
               a different signature.
         2. Release changelog located at:
-          - https://github.com/josh-silvas/nbot/releases/tag/{{ .Tag }}
+          - https://github.com/josh-silvas/dmux/releases/tag/{{ .Tag }}
         3. For issues with this tool, please submit a GitHub issue here:
-          - https://github.com/josh-silvas/nbot/issues
+          - https://github.com/josh-silvas/dmux/issues
       v{{ .Tag }} NEW RELEASE INFO:
         4. Initial release!
 
-    homepage: "https://github.com/josh-silvas/nbot"
-    description: "NBot is a Nautobot cli tool with ssh functionality for assist Network Engineering teams."
+    homepage: "https://github.com/josh-silvas/dmux"
+    description: "DMux is a cli tool with ssh functionality for assist Network Engineering teams."
     skip_upload: "auto"
-    test: "system '#{bin}/nbot'"
-    install: "bin.install 'nbot'"
+    test: "system '#{bin}/dmux'"
+    install: "bin.install 'dmux'"
 
 nfpms:
-  - id: "nbot"
+  - id: "dmux"
     file_name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     builds:
-      - "nbot-linux-amd64"
+      - "dmux-linux-amd64"
     replacements:
       amd64: "64-bit"
       386: "32-bit"
       darwin: "macOS"
       linux: "Linux"
     vendor: "Josh Silvas"
-    homepage: "https://github.com/josh-silvas/nbot"
+    homepage: "https://github.com/josh-silvas/dmux"
     maintainer: "Josh Silvas <josh@jsilvas.com>"
-    description: "NBot is a Nautobot cli tool with ssh functionality for assist Network Engineering teams."
+    description: "DMux is a Nautobot cli tool with ssh functionality for assist Network Engineering teams."
     license: "Apache 2.0"
     formats:
       - "deb"
@@ -56,40 +56,51 @@ nfpms:
     epoch: "1"
 
 builds:
-  - id: "nbot-osx-amd64"
+  - id: "dmux-osx-amd64"
     goos:
       - "darwin"
     targets:
       - "darwin_amd64"
     main: "cmd/main.go"
     ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "nbot"
+    binary: "dmux"
     env:
       - "CGO_ENABLED=1"
 
-  - id: "nbot-osx-arm64"
+  - id: "dmux-osx-arm64"
     goos:
       - "darwin"
     targets:
       - "darwin_arm64"
     main: "cmd/main.go"
     ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "nbot"
+    binary: "dmux"
     env:
       - "CGO_ENABLED=1"
 
-  - id: "nbot-linux-amd64"
+  - id: "dmux-linux-amd64"
     goos:
       - "linux"
     targets:
       - "linux_amd64"
     main: "cmd/main.go"
     ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -linkmode external -extldflags -static"
-    binary: "nbot"
+    binary: "dmux"
     env:
       - "CC=x86_64-linux-musl-gcc"
       - "CXX=x86_64-linux-musl-g++"
       - "CGO_ENABLED=1"
+
+  -  id: "dmux-windows-amd64"
+     goos:
+       - "windows"
+     targets:
+       - "windows_amd64"
+     main: "cmd/main.go"
+     ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
+     binary: "dmux"
+     env:
+       - "CGO_ENABLED=1"
 
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"

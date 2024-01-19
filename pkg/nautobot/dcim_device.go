@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 import (
 	"encoding/json"
@@ -21,6 +21,7 @@ type Device struct {
 	Face             *LabelValue            `json:"face"`
 	LastUpdated      string                 `json:"last_updated"`
 	LocalContextData map[string]interface{} `json:"local_context_data"`
+	Location         *Location              `json:"location"`
 	Name             string                 `json:"name"`
 	NotesURL         string                 `json:"notes_url"`
 	ParentDevice     *struct {
@@ -95,6 +96,5 @@ func (c *Client) GetDevices(query *url.Values) ([]Device, error) {
 		}
 		offset += 50
 	}
-
 	return devices, nil
 }

@@ -11,7 +11,6 @@ import (
 	transport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/pkg/nautobotv1"
 	"github.com/manifoldco/promptui"
 	"github.com/netbox-community/go-netbox/v3/netbox/client"
 	"github.com/netbox-community/go-netbox/v3/netbox/client/dcim"
@@ -37,7 +36,7 @@ func NewNetbox(token, nbURL string) (*Netbox, error) {
 	return &Netbox{*c}, nil
 }
 
-// GetDevice : Nautobot: Returns a single device from Nautobot.
+// GetDevice : NautobotV1: Returns a single device from NautobotV1.
 func (n Netbox) GetDevice(method string, value any) (Device, error) {
 	switch strings.ToLower(method) {
 	case ByID:
@@ -55,7 +54,7 @@ func (n Netbox) GetDevice(method string, value any) (Device, error) {
 	}
 }
 
-// deviceByNameOrID : Nautobot: Returns a device by name or UUIDv4 ID.
+// deviceByNameOrID : NautobotV1: Returns a device by name or UUIDv4 ID.
 func (n Netbox) deviceByNameOrID(name string) (Device, error) {
 	// 1. First, attempt to convert the argD variable to an integer,
 	//    if successful, we can assume this is a Netbox ID.
@@ -66,7 +65,7 @@ func (n Netbox) deviceByNameOrID(name string) (Device, error) {
 	}
 
 	// 2. Second, if there is still not a Netbox ID, but the name variable is
-	//    set with something, then we can include this into the name search in Nautobot.
+	//    set with something, then we can include this into the name search in NautobotV1.
 	if params.ID == nil && name != "" {
 		params.NameIc = &name
 	}
@@ -91,13 +90,13 @@ func (n Netbox) deviceByMac(mac string) (Device, error) {
 // deviceByIP : Netbox: Returns a device by IP address.
 func (n Netbox) deviceByIP(ip net.IP) (Device, error) {
 	// 1. Create the device object, we don't want to fail out
-	//    in there's a Nautobot error, since we already have what we
+	//    in there's a NautobotV1 error, since we already have what we
 	//    need to connect.
 	dev := Device{
 		IP:       ip.String(),
 		Hostname: ip.String(),
 	}
-	// 2. Fetch all the devices from Nautobot that match this IP address.
+	// 2. Fetch all the devices from NautobotV1 that match this IP address.
 	ips, err := n.Ipam.IpamIPAddressesList(&ipam.IpamIPAddressesListParams{Address: &dev.IP}, nil)
 	if err != nil {
 		logrus.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
@@ -124,7 +123,7 @@ func (n Netbox) deviceByIP(ip net.IP) (Device, error) {
 	}
 
 	// 3. For each IP address, query the first match found for a device
-	//    within Nautobot.
+	//    within NautobotV1.
 	d := make([]models.DeviceWithConfigContext, 0)
 	for _, i := range ips.GetPayload().Results {
 		if i.AssignedObject == nil {
@@ -149,20 +148,20 @@ func (n Netbox) deviceByIP(ip net.IP) (Device, error) {
 			}()
 			item, err := n.Dcim.DcimDevicesRead(&dcim.DcimDevicesReadParams{ID: id}, nil)
 			if err != nil {
-				logrus.Errorf("[COMMERR:Nautobot:Devices::%s]", err)
+				logrus.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
 				return dev, nil
 			}
 			d = append(d, *item.Payload)
 		}
 	}
 	if len(d) == 0 {
-		fmt.Println(text.FgHiYellow.Sprintf("\nUnable to find Nautobot device for %s. Using IP only.", ip.String()))
+		fmt.Println(text.FgHiYellow.Sprintf("\nUnable to find NautobotV1 device for %s. Using IP only.", ip.String()))
 	}
 
 	dev = n.nbDeviceToSotDevice(d[0])
 	dev.IP = ip.String()
 
-	// 4. Finally, return the Nautobot device.
+	// 4. Finally, return the NautobotV1 device.
 	return dev, nil
 }
 
@@ -205,11 +204,11 @@ func (n Netbox) consolePort(id int) (models.ConsolePort, error) { // nolint: unu
 // deviceByName : Netbox: Returns a device by name.
 func (n Netbox) getDevice(params *dcim.DcimDevicesListParams) (Device, error) {
 	// 1. Ignore devices in Offline status
-	offline := nautobotv1.StatusOffline
+	offline := "offline"
 	params.Statusn = &offline
 	params.Context = context.Background()
 
-	// 2. Query Nautobot with the newly built query parameters.
+	// 2. Query NautobotV1 with the newly built query parameters.
 	d, err := n.Dcim.DcimDevicesList(params, nil)
 	if err != nil {
 		return Device{}, fmt.Errorf("[Devices::%w]", err)
@@ -230,7 +229,7 @@ func (n Netbox) getDevice(params *dcim.DcimDevicesListParams) (Device, error) {
 	}
 
 	if device.PrimaryIP == nil {
-		return Device{}, fmt.Errorf("`%v` does not have a primary IP assigned in Nautobot", params)
+		return Device{}, fmt.Errorf("`%v` does not have a primary IP assigned in NautobotV1", params)
 	}
 
 	// 5. Finally, return the device.

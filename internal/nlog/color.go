@@ -2,6 +2,7 @@ package nlog
 
 import (
 	"fmt"
+	"runtime"
 	"strconv"
 )
 
@@ -23,5 +24,8 @@ const (
 
 // color : add color to a log message
 func color(code int, v string) string {
+	if runtime.GOOS == "windows" { // nolint:goconst
+		return v
+	}
 	return fmt.Sprintf("\033[%sm%s%s", strconv.Itoa(code), v, reset)
 }

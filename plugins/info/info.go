@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/akamensky/argparse"
-	"github.com/josh-silvas/nbot/internal/core"
-	"github.com/josh-silvas/nbot/internal/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
-	"github.com/josh-silvas/nbot/pkg/sot"
+	"github.com/josh-silvas/dmux/internal/core"
+	"github.com/josh-silvas/dmux/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/nlog"
+	"github.com/josh-silvas/dmux/pkg/sot"
 )
 
 const pluginName = "info"
@@ -39,7 +39,7 @@ func (p Plugin) CMD() *argparse.Command {
 func (p Plugin) Func(cfg keyring.Settings) {
 	// 1. Check that a device has been passed in
 	if strings.TrimSpace(*p.argD) == "" && strings.TrimSpace(*p.argSe) == "" {
-		p.Log.Fatalf("nbot info [Name, IP Address, Mac Address] or [DeviceSerial] must be provided!")
+		p.Log.Fatalf("dmux info [Name, IP Address, Mac Address] or [DeviceSerial] must be provided!")
 	}
 
 	s, err := sot.New(cfg)

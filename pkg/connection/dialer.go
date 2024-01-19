@@ -206,7 +206,7 @@ func (c *SSH) SetLog(hostName string) {
 		return
 	}
 
-	fullPath := fmt.Sprintf("%s/.log/nbot/ssh", prof.HomeDir)
+	fullPath := fmt.Sprintf("%s/.log/dmux/ssh", prof.HomeDir)
 	if _, err := os.Stat(fullPath); errors.Is(err, os.ErrNotExist) {
 		if err := os.MkdirAll(fullPath, os.ModePerm); err != nil {
 			logrus.Errorf("[SetLog.Mkdir::%s]", err)

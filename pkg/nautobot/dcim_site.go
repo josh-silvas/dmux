@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 // Region : Type represents a region object in Nautobot
 type Region struct {

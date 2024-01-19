@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/josh-silvas/nbot/internal/keyring"
+	"github.com/josh-silvas/dmux/internal/keyring"
 	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
 )
@@ -13,6 +13,7 @@ import (
 // SupportedSoT : A map of supported SoT backends.
 var SupportedSoT = map[string]string{
 	"nautobot_v1": "Nautobot v1",
+	"nautobot_v2": "Nautobot v2",
 	"netbox":      "Netbox",
 }
 
@@ -40,16 +41,16 @@ type (
 
 	// Device : A struct used to represent a device in the SoT.
 	Device struct {
-		ID       string `nbot:"-"`
-		AssetTag string `nbot:"-"`
-		Hostname string `nbot:"required"`
-		Status   string `nbot:"required"`
-		IP       string `nbot:"required"`
-		Platform string `nbot:"-"`
-		Tenant   string `nbot:"-"`
-		Location string `nbot:"-"`
-		Serial   string `nbot:"-"`
-		Comments string `nbot:"-"`
+		ID       string `dmux:"-"`
+		AssetTag string `dmux:"-"`
+		Hostname string `dmux:"required"`
+		Status   string `dmux:"required"`
+		IP       string `dmux:"required"`
+		Platform string `dmux:"-"`
+		Tenant   string `dmux:"-"`
+		Location string `dmux:"-"`
+		Serial   string `dmux:"-"`
+		Comments string `dmux:"-"`
 		Console  Console
 	}
 
@@ -63,22 +64,32 @@ type (
 
 // New : Function used to create a new SoT client data type.
 func New(settings keyring.Settings) (SoT, error) {
-	backend, err := settings.KeyFromSection("nbot", "sot-type", selectSoT)
+	backend, err := settings.KeyFromSection("dmux", "sot-type", selectSoT)
 	if err != nil {
 		logrus.Fatalf("cfg.KeyFromSection(%s)", err)
 	}
 
 	switch strings.ToLower(backend.String()) {
 	case "nautobot_v1":
-		nbURL, err := settings.KeyFromSection("nautobot", "url", setSotURL)
+		nbURL, err := settings.KeyFromSection("nautobot_v1", "url", setSotURL)
 		if err != nil {
 			return nil, fmt.Errorf("settings.KeyFromSection: %w", err)
 		}
-		nKey, err := settings.Nautobot()
+		nKey, err := settings.NautobotV1()
 		if err != nil {
-			logrus.Fatalf("Nautobot(%s)", err)
+			logrus.Fatalf("NautobotV1(%s)", err)
 		}
-		return NewNautobot(nKey.Password(), nbURL.String())
+		return NewNautobotV1(nKey.Password(), nbURL.String())
+	case "nautobot_v2":
+		nbURL, err := settings.KeyFromSection("nautobot_v2", "url", setSotURL)
+		if err != nil {
+			return nil, fmt.Errorf("settings.KeyFromSection: %w", err)
+		}
+		nKey, err := settings.NautobotV2()
+		if err != nil {
+			logrus.Fatalf("NautobotV2(%s)", err)
+		}
+		return NewNautobotV2(nKey.Password(), nbURL.String())
 	case "netbox":
 		nbURL, err := settings.KeyFromSection("netbox", "url", setSotURL)
 		if err != nil {
@@ -121,7 +132,7 @@ func selectSoT() (string, error) {
 		if result == SupportedSoT[k] {
 			fmt.Println(text.FgHiGreen.Sprintf("Using %s as the backend source-of-truth. "+
 				"You can always change your backend system by editing the "+
-				"NBot configuration file in $HOME/%s/%s settings. 😊",
+				"DMux configuration file in $HOME/%s/%s settings. 😊",
 				SupportedSoT[k], keyring.ConfigPath, keyring.SettingsFile))
 			return k, nil
 		}

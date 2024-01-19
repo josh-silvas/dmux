@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 // Platform : Type definition for the Platform struct
 type Platform struct {

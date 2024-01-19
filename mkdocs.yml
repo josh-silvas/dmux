@@ -1,7 +1,7 @@
 ---
-site_name: "NBot CLI"
+site_name: "DMux CLI"
 site_url: "https://example.com/"
-repo_url: "https://github.com/josh-silvas/nbot/"
+repo_url: "https://github.com/josh-silvas/dmux/"
 nav:
   - Home: "index.md"
   - Installing: "installation.md"

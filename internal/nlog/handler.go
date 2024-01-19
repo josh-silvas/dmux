@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/josh-silvas/nbot/pkg/shared"
+	"github.com/josh-silvas/dmux/pkg/shared"
 )
 
 // H : custom Handler for log messages

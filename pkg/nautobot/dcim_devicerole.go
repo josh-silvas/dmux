@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 // DeviceRole : defines a device_role entry in Nautobot
 type DeviceRole struct {

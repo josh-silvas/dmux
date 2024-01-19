@@ -8,14 +8,14 @@ import (
 	"time"
 
 	"github.com/99designs/keyring"
-	"github.com/josh-silvas/nbot/internal/nlog"
+	"github.com/josh-silvas/dmux/internal/nlog"
 	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
 )
 
 var (
 	userProfile *user.User
-	l           nlog.Logger
+	l           = nlog.NewWithGroup("keyring")
 )
 
 type (

@@ -1,5 +1,5 @@
 ---
-# NBot CI testing workflow.
+# DMux CI testing workflow.
 name: "Tests"
 
 concurrency:  # Cancel any existing runs of this workflow for this same PR
@@ -54,7 +54,7 @@ jobs:
 
   # Run unit tests
   test:
-    name: "NBot Unit Tests"
+    name: "DMux Unit Tests"
     needs:
       - "golangci-lint"
       - "yamllint"

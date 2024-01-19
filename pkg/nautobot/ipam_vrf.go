@@ -1,4 +1,4 @@
-package nautobotv1
+package nautobot
 
 // VRF : defines a stub vrf entry in Nautobot
 type VRF struct {

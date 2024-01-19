@@ -1,8 +1,8 @@
-package nautobotv1
+package nautobot
 
 const (
 	// StatusOffline : Device is offline
-	StatusOffline = "offline"
+	StatusOffline = "Offline"
 	// StatusActive : Device is active
-	StatusActive = "active"
+	StatusActive = "Active"
 )
