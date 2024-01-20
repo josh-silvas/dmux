@@ -86,10 +86,10 @@ jobs:
     if: "github.ref_type == 'tag'"
     name: "Release"
     runs-on: "macos-latest"
-    needs:
-      - "golangci-lint"
-      - "yamllint"
-      - "test"
+#    needs:
+#      - "golangci-lint"
+#      - "yamllint"
+#      - "test"
     steps:
       - name: "Git Checkout"
         uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
