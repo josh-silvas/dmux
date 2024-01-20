@@ -99,13 +99,13 @@ jobs:
           go-version-file: "go.mod"
           cache: true
       - name: "Install Dependencies"
-        run: "brew install musl-cross"
+        run: "brew install filosottile/musl-cross/musl-cross"
       - name: "Run GoReleaser Release"
         uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
         with:
           # One of 'goreleaser' (default) or 'goreleaser-pro'
           distribution: "goreleaser"
           version: "1.23.0"
-          args: "release --clean"
+          args: "release --snapshot --clean"
         env:
-          GITHUB_TOKEN: "${{ secrets.AUTHENTICATION_TOKEN }}"
+          GITHUB_TOKEN: "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"
