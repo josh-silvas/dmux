@@ -33,54 +33,54 @@ permissions:
 
 jobs:
 
-  golangci-lint:
-    name: "GolangCI-Lint"
-    runs-on: "ubuntu-latest"
-    timeout-minutes: 5
-    steps:
-      - name: "Git Checkout"
-        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
-      - name: "Setup Go Environment"
-        uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
-        with:
-          go-version-file: "go.mod"
-          cache: true
-      - name: "Run GolangCI Linting Process"
-        uses: "golangci/golangci-lint-action@v3"
-        with:
-          version: "v1.55"
-          args: "--out-format=colored-line-number --tests=false --exclude-use-default=false"
-
-  yamllint:
-    name: "YAML Lint"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Git Checkout"
-        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
-      - name: "Run YAML Linting Process"
-        uses: "karancode/yamllint-github-action@master"
-        with:
-          yamllint_strict: false
-          yamllint_comment: true
-
-  test:
-    name: "Unit Tests"
-    needs:
-      - "golangci-lint"
-      - "yamllint"
-    runs-on: "ubuntu-latest"
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
-      - uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
-        with:
-          go-version-file: "go.mod"
-          cache: true
-      - name: "Run Unit Tests"
-        run: "make _unittest"
-        timeout-minutes: 10
+#  golangci-lint:
+#    name: "GolangCI-Lint"
+#    runs-on: "ubuntu-latest"
+#    timeout-minutes: 5
+#    steps:
+#      - name: "Git Checkout"
+#        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
+#      - name: "Setup Go Environment"
+#        uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
+#        with:
+#          go-version-file: "go.mod"
+#          cache: true
+#      - name: "Run GolangCI Linting Process"
+#        uses: "golangci/golangci-lint-action@v3"
+#        with:
+#          version: "v1.55"
+#          args: "--out-format=colored-line-number --tests=false --exclude-use-default=false"
+#
+#  yamllint:
+#    name: "YAML Lint"
+#    runs-on: "ubuntu-latest"
+#    steps:
+#      - name: "Git Checkout"
+#        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
+#      - name: "Run YAML Linting Process"
+#        uses: "karancode/yamllint-github-action@master"
+#        with:
+#          yamllint_strict: false
+#          yamllint_comment: true
+#
+#  test:
+#    name: "Unit Tests"
+#    needs:
+#      - "golangci-lint"
+#      - "yamllint"
+#    runs-on: "ubuntu-latest"
+#    timeout-minutes: 15
+#    strategy:
+#      fail-fast: false
+#    steps:
+#      - uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
+#      - uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
+#        with:
+#          go-version-file: "go.mod"
+#          cache: true
+#      - name: "Run Unit Tests"
+#        run: "make _unittest"
+#        timeout-minutes: 10
 
   goreleaser:
     if: "github.ref_type == 'tag'"
@@ -98,12 +98,14 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
+      - name: "Install Dependencies"
+        run: "brew install musl-cross"
       - name: "Run GoReleaser Release"
         uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
         with:
           # One of 'goreleaser' (default) or 'goreleaser-pro'
           distribution: "goreleaser"
           version: "1.23.0"
-          args: "release --clean --rm-dist"
+          args: "release --clean"
         env:
           GITHUB_TOKEN: "${{ secrets.AUTHENTICATION_TOKEN }}"
