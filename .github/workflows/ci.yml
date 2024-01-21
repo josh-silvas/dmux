@@ -84,6 +84,7 @@ jobs:
 
   build-linux-binary:
     if: "github.ref_type == 'tag'"
+    name: "Build Linux Binaries"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Git Checkout"
@@ -99,7 +100,7 @@ jobs:
           # One of 'goreleaser' (default) or 'goreleaser-pro'
           distribution: "goreleaser"
           version: "1.23.0"
-          args: "release --skip-publish --config .goreleaser-for-linux.yaml"
+          args: "release --skip-publish --config .goreleaser-for-linux.yml"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: "Upload"
@@ -110,6 +111,7 @@ jobs:
 
   build-darwin-binary:
     if: "github.ref_type == 'tag'"
+    name: "Build Darwin Binaries"
     runs-on: "macos-latest"
     steps:
       - name: "Git Checkout"
@@ -125,7 +127,7 @@ jobs:
           # One of 'goreleaser' (default) or 'goreleaser-pro'
           distribution: "goreleaser"
           version: "1.23.0"
-          args: "release --skip-publish --config .goreleaser-for-darwin.yaml"
+          args: "release --skip-publish --config .goreleaser-for-darwin.yml"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: "Upload"
