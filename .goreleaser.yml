@@ -65,6 +65,8 @@ builds:
     binary: "dmux"
     env:
       - "CGO_ENABLED=1"
+      - "CC=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang"
+      - "CXX=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang++"
 
   - id: "dmux-osx-arm64"
     targets:
@@ -74,6 +76,8 @@ builds:
     binary: "dmux"
     env:
       - "CGO_ENABLED=1"
+      - "CC=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang"
+      - "CXX=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang++"
 
   - id: "dmux-linux-amd64"
     targets:

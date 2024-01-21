@@ -85,7 +85,7 @@ jobs:
   goreleaser:
     if: "github.ref_type == 'tag'"
     name: "Release"
-    runs-on: "macos-latest"
+    runs-on: "ubuntu-latest"
 #    needs:
 #      - "golangci-lint"
 #      - "yamllint"
@@ -98,8 +98,10 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
-      - name: "Install Dependencies"
-        run: "sudo apt-get install gcc-multilib g++-multilib"
+      - name: "OSXCross for CGO Support"
+        run: |
+          mkdir ../plenti-osxcross
+          git clone https://github.com/plentico/plenti-osxcross.git ../plenti-osxcross/target
       - name: "Run GoReleaser Release"
         uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
         with:
