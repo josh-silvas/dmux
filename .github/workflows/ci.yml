@@ -82,11 +82,65 @@ jobs:
 #        run: "make _unittest"
 #        timeout-minutes: 10
 
+  build-linux-binary:
+    if: "github.ref_type == 'tag'"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Git Checkout"
+        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
+      - name: "Setup Go Environment"
+        uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
+        with:
+          go-version-file: "go.mod"
+          cache: true
+      - name: "Build"
+        uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
+        with:
+          # One of 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: "goreleaser"
+          version: "1.23.0"
+          args: "release --skip-publish --config .goreleaser-for-linux.yaml"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: "Upload"
+        uses: "actions/upload-artifact@v4"
+        with:
+            name: "dmux-linux"
+            path: "build/dmux*"
+
+  build-darwin-binary:
+    if: "github.ref_type == 'tag'"
+    runs-on: "macos-latest"
+    steps:
+      - name: "Git Checkout"
+        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9"  # v3.5.3
+      - name: "Setup Go Environment"
+        uses: "actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe"  # v4.1.0
+        with:
+          go-version-file: "go.mod"
+          cache: true
+      - name: "Build"
+        uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
+        with:
+          # One of 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: "goreleaser"
+          version: "1.23.0"
+          args: "release --skip-publish --config .goreleaser-for-darwin.yaml"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: "Upload"
+        uses: "actions/upload-artifact@v4"
+        with:
+          name: "dmux-darwin"
+          path: "build/dmux*"
+
   goreleaser:
     if: "github.ref_type == 'tag'"
     name: "Release"
     runs-on: "ubuntu-latest"
-#    needs:
+    needs:
+      - "build-linux-binary"
+      - "build-darwin-binary"
 #      - "golangci-lint"
 #      - "yamllint"
 #      - "test"
@@ -98,10 +152,27 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: true
-      - name: "OSXCross for CGO Support"
+      - name: "Make Directories"
         run: |
-          mkdir ../plenti-osxcross
-          git clone https://github.com/plentico/plenti-osxcross.git ../plenti-osxcross/target
+          mkdir -p ./dmux-build/linux
+          mkdir -p ./dmux-build/darwin
+      - name: "Download Linux Binaries"
+        uses: "actions/download-artifact@v4"
+        with:
+          name: "dmux-linux"
+          path: "./dmux-build/linux"
+      - name: "Download Darwin Binaries"
+        uses: "actions/download-artifact@v4"
+        with:
+          name: "dmux-darwin"
+          path: "./dmux-build/darwin"
+      - name: "Merge Checksum Files"
+        run: |
+          cd ./dmux-build
+          cat ./darwin/dmux*checksums.txt >> checksums.txt
+          cat ./linux/dmux*checksums.txt >> checksums.txt
+          rm ./darwin/dmux*checksums.txt
+          rm ./linux/dmux*checksums.txt
       - name: "Run GoReleaser Release"
         uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
         with:

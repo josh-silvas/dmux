@@ -1,11 +1,19 @@
 ---
 project_name: "dmux"
 
+builds:
+  - skip: true
+
 release:
   github:
     owner: "josh-silvas"
     name: "dmux"
   name_template: "{{ .Tag }}"
+  draft: true
+  mode: "append"
+  extra_files:
+    - glob: "./dmux-build/**/*"
+    - glob: "./dmux-build/checksums.txt"
 
 brews:
   - name: "dmux"
@@ -55,40 +63,6 @@ nfpms:
       - "deb"
     bindir: "/usr/local/bin"
     epoch: "1"
-
-builds:
-  - id: "dmux-osx-amd64"
-    targets:
-      - "darwin_amd64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "dmux"
-    env:
-      - "CGO_ENABLED=1"
-      - "CC=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang"
-      - "CXX=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang++"
-
-  - id: "dmux-osx-arm64"
-    targets:
-      - "darwin_arm64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "dmux"
-    env:
-      - "CGO_ENABLED=1"
-      - "CC=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang"
-      - "CXX=/home/runner/work/plenti/plenti-osxcross/target/bin/o64-clang++"
-
-  - id: "dmux-linux-amd64"
-    targets:
-      - "linux_amd64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -linkmode external -extldflags -static"
-    binary: "dmux"
-    env:
-      - "CC=x86_64-linux-musl-gcc"
-      - "CXX=x86_64-linux-musl-g++"
-      - "CGO_ENABLED=1"
 
 archives:
   - name_template: >-
