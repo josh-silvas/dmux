@@ -119,8 +119,3 @@ dist: "build"
 
 env_files:
   github_token: "~/.config/goreleaser/github_com_token"
-
-github_urls:
-  api: "https://github.com/api/v3/"
-  upload: "https://github.com/api/uploads/"
-  download: "https://github.com/"
