@@ -10,6 +10,8 @@ local
 
 # binary files
 /build/*
+/build-linux/*
+/build-darwin/*
 *.pyc
 
 playground/
