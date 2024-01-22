@@ -20,7 +20,7 @@ brews:
     commit_author:
       name: "Josh Silvas"
       email: "josh@jsilvas.com"
-    repository:
+    tap:
       owner: "josh-silvas"
       name: "dmux"
     folder: "Formula"
