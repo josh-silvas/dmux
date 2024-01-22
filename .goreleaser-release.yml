@@ -1,11 +1,19 @@
 ---
 project_name: "dmux"
 
+builds:
+  - skip: true
+
 release:
   github:
     owner: "josh-silvas"
     name: "dmux"
   name_template: "{{ .Tag }}"
+  draft: true
+  mode: "append"
+  extra_files:
+    - glob: "./dmux-build/**/*"
+    - glob: "./dmux-build/checksums.txt"
 
 brews:
   - name: "dmux"
@@ -37,7 +45,13 @@ brews:
 
 nfpms:
   - id: "dmux"
-    file_name_template: "{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    file_name_template: >-
+      {{- .ProjectName }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     builds:
       - "dmux-linux-amd64"
     vendor: "Josh Silvas"
@@ -50,55 +64,14 @@ nfpms:
     bindir: "/usr/local/bin"
     epoch: "1"
 
-builds:
-  - id: "dmux-osx-amd64"
-    goos:
-      - "darwin"
-    targets:
-      - "darwin_amd64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "dmux"
-    env:
-      - "CGO_ENABLED=1"
-
-  - id: "dmux-osx-arm64"
-    goos:
-      - "darwin"
-    targets:
-      - "darwin_arm64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "dmux"
-    env:
-      - "CGO_ENABLED=1"
-
-  - id: "dmux-linux-amd64"
-    goos:
-      - "linux"
-    targets:
-      - "linux_amd64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -linkmode external -extldflags -static"
-    binary: "dmux"
-    env:
-      - "CC=x86_64-linux-musl-gcc"
-      - "CXX=x86_64-linux-musl-g++"
-      - "CGO_ENABLED=1"
-
-  - id: "dmux-windows-amd64"
-    goos:
-      - "windows"
-    targets:
-      - "windows_amd64"
-    main: "cmd/main.go"
-    ldflags: "-s -w -X main.buildVersion={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}"
-    binary: "dmux"
-    env:
-      - "CGO_ENABLED=1"
-
 archives:
-  - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+  - name_template: >-
+      {{- .ProjectName }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     format: "tar.gz"
     files:
       - "LICENSE*"
