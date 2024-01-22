@@ -19,7 +19,7 @@ builds:
     env:
       - "CGO_ENABLED=1"
 
-dist: "build"
+dist: "build-darwin"
 
 env_files:
   github_token: "~/.config/goreleaser/github_com_token"
