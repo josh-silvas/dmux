@@ -9,7 +9,7 @@ class Dmux < Formula
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/josh-silvas/dmux/releases/dmux/1.0.0-beta.0/dmux_darwin_arm64.tar.gz"
+      url "https://github.com/josh-silvas/dmux/releases/download/1.0.0-beta.0/dmux_darwin_arm64.tar.gz"
       sha256 "72ddf24a3ab82bd9c0d8299f27e08e7de9a67229e50eeabf20666f072daa8146"
 
       def install
@@ -17,7 +17,7 @@ class Dmux < Formula
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/josh-silvas/dmux/releases/dmux/1.0.0-beta.0/dmux_darwin_amd64.tar.gz"
+      url "https://github.com/josh-silvas/dmux/releases/download/1.0.0-beta.0/dmux_darwin_amd64.tar.gz"
       sha256 "51e9d301d204d476d0d14ccc36b5d02ae6edeb61cc2dbc7960b412a406966e56"
 
       def install
@@ -28,7 +28,7 @@ class Dmux < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/josh-silvas/dmux/releases/dmux/1.0.0-beta.0/dmux_linux_amd64.tar.gz"
+      url "https://github.com/josh-silvas/dmux/releases/download/1.0.0-beta.0/dmux_linux_amd64.tar.gz"
       sha256 "958124ffffee57f54266c73ee2736ee36d0bacf4aaf580102d36495d661037d4"
 
       def install
