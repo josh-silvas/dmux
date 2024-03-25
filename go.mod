@@ -12,7 +12,7 @@ require (
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/uuid v1.5.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
-	github.com/jedib0t/go-pretty/v6 v6.5.3
+	github.com/jedib0t/go-pretty/v6 v6.5.6
 	github.com/manifoldco/promptui v0.9.0
 	github.com/netbox-community/go-netbox/v3 v3.4.5
 	github.com/sirupsen/logrus v1.9.3
