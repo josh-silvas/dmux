@@ -105,7 +105,7 @@ github.com/gsterjov/go-libsecret
 # github.com/hashicorp/go-cleanhttp v0.5.2
 ## explicit; go 1.13
 github.com/hashicorp/go-cleanhttp
-# github.com/jedib0t/go-pretty/v6 v6.5.3
+# github.com/jedib0t/go-pretty/v6 v6.5.6
 ## explicit; go 1.17
 github.com/jedib0t/go-pretty/v6/table
 github.com/jedib0t/go-pretty/v6/text
