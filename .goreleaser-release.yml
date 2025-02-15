@@ -27,7 +27,7 @@ brews:
       branch: "main"
       token: "{{ .Env.GITHUB_TOKEN }}"
     directory: "Formula"
-    url_template: "https://github.com/josh-silvas/dmux/releases/{{ .ProjectName }}/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/josh-silvas/{{ .ProjectName }}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     caveats: |
       DMux v{{ .Tag }} Notes:
         1. DMux will create it's own system keychain called 'DMux-Keyring'
