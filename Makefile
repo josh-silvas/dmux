@@ -26,7 +26,7 @@ _release:
 	@rm -rf build/*
 	@git tag -d $(VERSION) || true
 	@git tag $(VERSION)
-	@goreleaser --rm-dist
+	@goreleaser release --clean
 .PHONY: _release
 
 test_release: .env ## Test a release

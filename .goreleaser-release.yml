@@ -1,4 +1,5 @@
 ---
+version: 2
 project_name: "dmux"
 
 builds:
@@ -20,10 +21,12 @@ brews:
     commit_author:
       name: "Josh Silvas"
       email: "josh@jsilvas.com"
-    tap:
+    repository:
       owner: "josh-silvas"
       name: "dmux"
-    folder: "Formula"
+      branch: "main"
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    directory: "Formula"
     url_template: "https://github.com/josh-silvas/dmux/releases/{{ .ProjectName }}/{{ .Tag }}/{{ .ArtifactName }}"
     caveats: |
       DMux v{{ .Tag }} Notes:
