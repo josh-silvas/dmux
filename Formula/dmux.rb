@@ -5,20 +5,20 @@
 class Dmux < Formula
   desc "DMux is a cli tool with ssh functionality for assist Network Engineering teams."
   homepage "https://github.com/josh-silvas/dmux"
-  version "1.0.0-beta.0"
+  version "0.1.3"
 
   on_macos do
-    if Hardware::CPU.arm?
-      url "https://github.com/josh-silvas/dmux/releases/download/1.0.0-beta.0/dmux_darwin_arm64.tar.gz"
-      sha256 "72ddf24a3ab82bd9c0d8299f27e08e7de9a67229e50eeabf20666f072daa8146"
+    on_intel do
+      url "https://github.com/josh-silvas/dmux/releases/dmux/0.1.3/dmux_darwin_amd64.tar.gz"
+      sha256 "351ba77c6451d4a2b0673fbaaad38b530504489a6a2daedc018a2892378eba0b"
 
       def install
         bin.install 'dmux'
       end
     end
-    if Hardware::CPU.intel?
-      url "https://github.com/josh-silvas/dmux/releases/download/1.0.0-beta.0/dmux_darwin_amd64.tar.gz"
-      sha256 "51e9d301d204d476d0d14ccc36b5d02ae6edeb61cc2dbc7960b412a406966e56"
+    on_arm do
+      url "https://github.com/josh-silvas/dmux/releases/dmux/0.1.3/dmux_darwin_arm64.tar.gz"
+      sha256 "1a8d51d46662f427a201494bcd4aad1b88ac5932d9db386e73b5867eb572b53b"
 
       def install
         bin.install 'dmux'
@@ -27,27 +27,29 @@ class Dmux < Formula
   end
 
   on_linux do
-    if Hardware::CPU.intel?
-      url "https://github.com/josh-silvas/dmux/releases/download/1.0.0-beta.0/dmux_linux_amd64.tar.gz"
-      sha256 "958124ffffee57f54266c73ee2736ee36d0bacf4aaf580102d36495d661037d4"
+    on_intel do
+      if Hardware::CPU.is_64_bit?
+        url "https://github.com/josh-silvas/dmux/releases/dmux/0.1.3/dmux_linux_amd64.tar.gz"
+        sha256 "12937f0ccafbf80cd753a8584cc73b74255b986bd9ae740e27362f3c5a300ace"
 
-      def install
-        bin.install 'dmux'
+        def install
+          bin.install 'dmux'
+        end
       end
     end
   end
 
   def caveats
     <<~EOS
-      DMux v1.0.0-beta.0 Notes:
+      DMux v0.1.3 Notes:
         1. DMux will create it's own system keychain called 'DMux-Keyring'
           1a. You may need to reauthenticate dmux to this keychain after update because the binary is
               a different signature.
         2. Release changelog located at:
-          - https://github.com/josh-silvas/dmux/releases/tag/1.0.0-beta.0
+          - https://github.com/josh-silvas/dmux/releases/tag/0.1.3
         3. For issues with this tool, please submit a GitHub issue here:
           - https://github.com/josh-silvas/dmux/issues
-      v1.0.0-beta.0 NEW RELEASE INFO:
+      v0.1.3 NEW RELEASE INFO:
         4. Initial release!
     EOS
   end
