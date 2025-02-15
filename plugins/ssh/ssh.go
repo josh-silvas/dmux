@@ -81,7 +81,7 @@ func (p Plugin) Func(cfg keyring.Settings) {
 		return
 	}
 
-	fmt.Println(text.FgHiCyan.Sprintf("\nLogging into %s: %s [%s] ", d.ID, d.Hostname, d.Status))
+	fmt.Println(text.FgHiCyan.Sprintf("\nLogging into %s [%s]", d.Hostname, d.IP))
 	if d.Comments != "" {
 		fmt.Println(text.FgHiYellow.Sprintf("Device has comments:\n%s", d.Comments))
 	}
