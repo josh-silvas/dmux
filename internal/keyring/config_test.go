@@ -2,13 +2,13 @@ package keyring
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/user"
 	"testing"
 	"time"
 
 	"github.com/99designs/keyring"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -23,7 +23,7 @@ var (
 func TestMain(m *testing.M) {
 	var err error
 	if testCfg, err = testNew(); err != nil {
-		logrus.Fatalf("dmux.keyring.New:%s", err)
+		log.Fatalf("dmux.keyring.New:%s", err)
 	}
 	os.Exit(m.Run())
 }
@@ -42,9 +42,6 @@ func testNew() (s Settings, err error) {
 		return s, fmt.Errorf("testNew:%w", err)
 	}
 	cfg.Test = true
-
-	// If we are at debug level in logrus, set debug in keyring
-	keyring.Debug = logrus.GetLevel() == logrus.DebugLevel
 
 	cfg.Key = make(map[string]keyring.Keyring)
 	cfg.Key[keyName], err = keyring.Open(keyring.Config{
@@ -66,7 +63,7 @@ func testNew() (s Settings, err error) {
 		KeychainAccessibleWhenUnlocked: true,
 	})
 	if err != nil {
-		logrus.Errorf("keyring:open:%s:%s", keyName, err)
+		log.Fatalf("keyring:open:%s:%s", keyName, err)
 	}
 
 	// Check if the new keychain is unlocked. If not

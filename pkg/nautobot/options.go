@@ -2,20 +2,20 @@ package nautobot
 
 import (
 	"fmt"
+	"github.com/josh-silvas/dmux/internal/nlog"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/hashicorp/go-cleanhttp"
-
-	"github.com/sirupsen/logrus"
 )
 
 type (
 	options struct {
 		baseURL       *string
 		httpTimeout   *int
-		logLevel      *logrus.Level
+		logLevel      *slog.Level
 		proxyURL      *string
 		useDev        *bool
 		httpTransport *http.Transport
@@ -47,7 +47,7 @@ func SetHTTPTransport(transport *http.Transport) Option {
 }
 
 // WithLogLevel : set custom client logging level
-func WithLogLevel(lvl logrus.Level) Option {
+func WithLogLevel(lvl slog.Level) Option {
 	return func(o *options) {
 		o.logLevel = &lvl
 	}
@@ -86,7 +86,7 @@ func (c *Client) processOptions(opts ...Option) error {
 	if options.proxyURL != nil {
 		pURL, err := url.Parse(*options.proxyURL)
 		if err != nil {
-			logrus.Fatal(err)
+			l.Fatal(err)
 		}
 		t := cleanhttp.DefaultPooledTransport()
 		t.Proxy = http.ProxyURL(pURL)
@@ -102,14 +102,8 @@ func (c *Client) processOptions(opts ...Option) error {
 		}
 	}
 
-	c.log = func() *logrus.Logger {
-		logger := logrus.New()
-		logger.Level = logrus.InfoLevel
-		if options.logLevel != nil {
-			logger.Level = *options.logLevel
-		}
-		return logger
-	}()
+	l := nlog.NewWithGroup("nautobot")
+	c.log = &l
 
 	return nil
 }

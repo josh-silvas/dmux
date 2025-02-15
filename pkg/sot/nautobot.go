@@ -8,10 +8,12 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/josh-silvas/dmux/internal/nlog"
 	"github.com/josh-silvas/dmux/pkg/nautobot"
 	"github.com/manifoldco/promptui"
-	"github.com/sirupsen/logrus"
 )
+
+var l = nlog.NewWithGroup("sot")
 
 // NautobotV1 implementation of the SoT interface.
 type NautobotV1 struct {
@@ -90,7 +92,7 @@ func (n NautobotV1) deviceByIP(ip net.IP) (Device, error) {
 	// 2. Fetch all the devices from NautobotV1 that match this IP address.
 	ips, err := n.GetIPAddresses(&url.Values{"address": []string{ip.String()}})
 	if err != nil {
-		logrus.Errorf("[COMERR:NautobotV1:IPAddresses::%s]", err)
+		l.Errorf("[COMERR:NautobotV1:IPAddresses::%s]", err)
 		return dev, nil
 	}
 
@@ -108,7 +110,7 @@ func (n NautobotV1) deviceByIP(ip net.IP) (Device, error) {
 				},
 			)
 			if err != nil {
-				logrus.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
+				l.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
 				return dev, nil
 			}
 			d = append(d, item...)
@@ -233,7 +235,7 @@ func (n NautobotV2) deviceByIP(ip net.IP) (Device, error) {
 	// 2. Fetch all the devices from NautobotV1 that match this IP address.
 	ips, err := n.GetIPAddresses(&url.Values{"address": []string{ip.String()}})
 	if err != nil {
-		logrus.Errorf("[COMERR:NautobotV1:IPAddresses::%s]", err)
+		l.Errorf("[COMERR:NautobotV1:IPAddresses::%s]", err)
 		return dev, nil
 	}
 
@@ -251,7 +253,7 @@ func (n NautobotV2) deviceByIP(ip net.IP) (Device, error) {
 				},
 			)
 			if err != nil {
-				logrus.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
+				l.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
 				return dev, nil
 			}
 			d = append(d, item...)
@@ -271,7 +273,6 @@ func (n NautobotV2) deviceByIP(ip net.IP) (Device, error) {
 // deviceByName : NautobotV2: Returns a device by name.
 func (n NautobotV2) getDevice(params *url.Values) (Device, error) {
 	// 1. Ignore devices in Offline status
-	params.Set("status__n", nautobot.StatusOffline)
 	params.Set("depth", "1")
 
 	// 2. Query NautobotV1 with the newly built query parameters.

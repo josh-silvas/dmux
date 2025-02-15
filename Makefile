@@ -70,7 +70,7 @@ _unittest:
 # -------------------------------------------------------------------------------------------
 # DOCUMENTATION: Doc builders and processes.
 # -------------------------------------------------------------------------------------------
-docs: ## Build mkdocs documentation
+docs: .env ## Build mkdocs documentation
 	@$(RUNNER) make _docs
 .PHONY: docs
 

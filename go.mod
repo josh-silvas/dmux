@@ -13,9 +13,9 @@ require (
 	github.com/google/uuid v1.5.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/jedib0t/go-pretty/v6 v6.5.3
+	github.com/kevinburke/ssh_config v1.2.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/netbox-community/go-netbox/v3 v3.4.5
-	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.18.0
 	golang.org/x/net v0.20.0

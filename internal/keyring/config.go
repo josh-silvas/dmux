@@ -10,7 +10,6 @@ import (
 	"github.com/99designs/keyring"
 	"github.com/go-ini/ini"
 	"github.com/manifoldco/promptui"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -111,7 +110,7 @@ func (s *Settings) KeyFromSection(section, key string, def func() (string, error
 	// If there is an error retrieving the section, it likely is not created yet.
 	// attempt to create the section
 	if err != nil {
-		logrus.Infof("Section [%s] not found in %s/%s, creating...", section, ConfigPath, SettingsFile)
+		l.Infof("Section [%s] not found in %s/%s, creating...", section, ConfigPath, SettingsFile)
 		sec, err = s.File.NewSection(section)
 		if err != nil {
 			return nil, err
@@ -185,7 +184,7 @@ func prompt(text string) string {
 	p := promptui.Prompt{Label: text}
 	resp, err := p.Run()
 	if err != nil {
-		logrus.Fatalf("prompt(%s)", err)
+		l.Fatalf("prompt(%s)", err)
 	}
 	return strings.TrimSpace(strings.ToLower(resp))
 }

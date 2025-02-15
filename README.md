@@ -13,7 +13,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/josh-silvas/dmux.svg?style=flat-square)](https://github.com/josh-silvas/dmux/graphs/contributors)
 
 
-***For full documentation, see the [DMux Documentation](https://pages.github.com/josh-silvas/dmux) site***
+***For full documentation, see the [DMux Documentation](https://josh-silvas.github.io/dmux/) site***
 
 ## Summary
 DMux is a CLI tool that allows you to interact with Nautobot, Netbox and potentially any SoT application via the command line. 

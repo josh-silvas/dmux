@@ -11,15 +11,17 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/sirupsen/logrus"
+	"github.com/josh-silvas/dmux/internal/nlog"
 )
+
+var l = nlog.NewWithGroup("nautobot")
 
 type (
 	// Client : Stored memory objects for the Nautobot client.
 	Client struct {
 		client   *http.Client
 		instance *url.URL
-		log      *logrus.Logger
+		log      *nlog.Logger
 		token    string
 	}
 

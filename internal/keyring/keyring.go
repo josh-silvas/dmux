@@ -10,7 +10,6 @@ import (
 	"github.com/99designs/keyring"
 	"github.com/josh-silvas/dmux/internal/nlog"
 	"github.com/manifoldco/promptui"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -94,13 +93,13 @@ func New(logger nlog.Logger) (s Settings, err error) {
 		return s, err
 	}
 
-	// If we are at debug level in logrus, set debug in keyring
+	// If we are at debug level in nlog, set debug in keyring
 	keyring.Debug = logger.Level() == slog.LevelDebug
 	cfg.Key = make(map[string]keyring.Keyring)
 
 	cfg.Key["default"], err = open("default")
 	if err != nil {
-		logrus.Errorf("keyring:open:default:%s", err)
+		l.Errorf("keyring:open:default:%s", err)
 	}
 
 	// Check if the new keychain is unlocked. If not process the unlock command.
@@ -161,7 +160,7 @@ func (s *Settings) Get(service string, opts ...Option) (key Credential, err erro
 		pUser := promptui.Prompt{Label: set.userPromptText}
 		set.user, err = pUser.Run()
 		if err != nil {
-			logrus.Fatalf("%s.PromptUser(%s)", svc, err)
+			l.Fatalf("%s.PromptUser(%s)", svc, err)
 		}
 	}
 
@@ -169,7 +168,7 @@ func (s *Settings) Get(service string, opts ...Option) (key Credential, err erro
 	pPass := promptui.Prompt{Label: set.passwdPromptText, Mask: '*'}
 	pass, err := pPass.Run()
 	if err != nil {
-		logrus.Fatalf("%s.PromptPass(%s)", svc, err)
+		l.Fatalf("%s.PromptPass(%s)", svc, err)
 	}
 
 	// Small function to hash the user/password if a user exists, or return the password.
@@ -185,11 +184,11 @@ func (s *Settings) Get(service string, opts ...Option) (key Credential, err erro
 		pExp := promptui.Prompt{Label: fmt.Sprintf("Enter `%s` password expiration in days", svc), Default: "365"}
 		rExp, err := pExp.Run()
 		if err != nil {
-			logrus.Fatalf("%s.PromptExpire(%s)", svc, err)
+			l.Fatalf("%s.PromptExpire(%s)", svc, err)
 		}
 		i, err := strconv.Atoi(rExp)
 		if err != nil {
-			logrus.Fatalf("%s.PromptExpire(%s)", svc, err)
+			l.Fatalf("%s.PromptExpire(%s)", svc, err)
 		}
 		exp = time.Unix(time.Now().Unix(), 0).Add(time.Hour * 24 * time.Duration(i)).Unix()
 	}
@@ -212,6 +211,6 @@ func (s *Settings) Delete(service string) error {
 		return fmt.Errorf("service.Remove:%w", err)
 	}
 
-	logrus.Infof("deleted `%s` key", svc)
+	l.Infof("deleted `%s` key", svc)
 	return nil
 }

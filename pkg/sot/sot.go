@@ -7,7 +7,6 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/josh-silvas/dmux/internal/keyring"
 	"github.com/manifoldco/promptui"
-	"github.com/sirupsen/logrus"
 )
 
 // SupportedSoT : A map of supported SoT backends.
@@ -66,7 +65,7 @@ type (
 func New(settings keyring.Settings) (SoT, error) {
 	backend, err := settings.KeyFromSection("dmux", "sot-type", selectSoT)
 	if err != nil {
-		logrus.Fatalf("cfg.KeyFromSection(%s)", err)
+		l.Fatalf("cfg.KeyFromSection(%s)", err)
 	}
 
 	switch strings.ToLower(backend.String()) {
@@ -77,7 +76,7 @@ func New(settings keyring.Settings) (SoT, error) {
 		}
 		nKey, err := settings.NautobotV1()
 		if err != nil {
-			logrus.Fatalf("NautobotV1(%s)", err)
+			l.Fatalf("NautobotV1(%s)", err)
 		}
 		return NewNautobotV1(nKey.Password(), nbURL.String())
 	case "nautobot_v2":
@@ -87,7 +86,7 @@ func New(settings keyring.Settings) (SoT, error) {
 		}
 		nKey, err := settings.NautobotV2()
 		if err != nil {
-			logrus.Fatalf("NautobotV2(%s)", err)
+			l.Fatalf("NautobotV2(%s)", err)
 		}
 		return NewNautobotV2(nKey.Password(), nbURL.String())
 	case "netbox":
@@ -97,7 +96,7 @@ func New(settings keyring.Settings) (SoT, error) {
 		}
 		nKey, err := settings.Netbox()
 		if err != nil {
-			logrus.Fatalf("Netbox(%s)", err)
+			l.Fatalf("Netbox(%s)", err)
 		}
 		return NewNetbox(nKey.Password(), nbURL.String())
 	default:

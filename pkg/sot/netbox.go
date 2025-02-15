@@ -16,7 +16,6 @@ import (
 	"github.com/netbox-community/go-netbox/v3/netbox/client/dcim"
 	"github.com/netbox-community/go-netbox/v3/netbox/client/ipam"
 	"github.com/netbox-community/go-netbox/v3/netbox/models"
-	"github.com/sirupsen/logrus"
 )
 
 // Netbox implementation of the SoT interface.
@@ -99,7 +98,7 @@ func (n Netbox) deviceByIP(ip net.IP) (Device, error) {
 	// 2. Fetch all the devices from NautobotV1 that match this IP address.
 	ips, err := n.Ipam.IpamIPAddressesList(&ipam.IpamIPAddressesListParams{Address: &dev.IP}, nil)
 	if err != nil {
-		logrus.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
+		l.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
 		return dev, nil
 	}
 
@@ -133,11 +132,11 @@ func (n Netbox) deviceByIP(ip net.IP) (Device, error) {
 			var obj AssignedObjectInterface
 			byteData, err := json.Marshal(i.AssignedObject)
 			if err != nil {
-				logrus.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
+				l.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
 				return dev, nil
 			}
 			if err := json.Unmarshal(byteData, &obj); err != nil {
-				logrus.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
+				l.Errorf("[COMERR:Netbox:IPAddresses::%s]", err)
 				return dev, nil
 			}
 			id := func() int64 {
@@ -148,7 +147,7 @@ func (n Netbox) deviceByIP(ip net.IP) (Device, error) {
 			}()
 			item, err := n.Dcim.DcimDevicesRead(&dcim.DcimDevicesReadParams{ID: id}, nil)
 			if err != nil {
-				logrus.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
+				l.Errorf("[COMMERR:NautobotV1:Devices::%s]", err)
 				return dev, nil
 			}
 			d = append(d, *item.Payload)

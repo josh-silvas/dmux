@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/josh-silvas/dmux/pkg/sot"
-	"github.com/sirupsen/logrus"
 )
 
 // Device : Nested device struct, so we can attach methods.
@@ -81,13 +80,13 @@ func (d Device) HostPort(port string) string {
 func (d Device) InteractiveShell(user, pass, port string) error {
 	c, err := NewDialer(d.HostPort(port), user, pass)
 	if err != nil {
-		logrus.Fatalf("[New::%s]", err)
+		l.Fatalf("New::%s", err)
 	}
 
 	// Create Session
 	session, err := c.Client.NewSession()
 	if err != nil {
-		logrus.Fatalf("[Client.NewSession::%s]", err)
+		l.Fatalf("Client.NewSession::%s", err)
 	}
 
 	// Set a terminal log for this session.
