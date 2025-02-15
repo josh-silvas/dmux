@@ -10,7 +10,7 @@ require (
 	github.com/go-openapi/runtime v0.26.2
 	github.com/go-openapi/strfmt v0.22.0
 	github.com/google/go-github v17.0.0+incompatible
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/jedib0t/go-pretty/v6 v6.5.3
 	github.com/kevinburke/ssh_config v1.2.0
