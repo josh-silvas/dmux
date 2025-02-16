@@ -5,20 +5,20 @@
 class Dmux < Formula
   desc "DMux is a cli tool with ssh functionality for assist Network Engineering teams."
   homepage "https://github.com/josh-silvas/dmux"
-  version "0.1.4"
+  version "0.1.5"
 
   on_macos do
     on_intel do
-      url "https://github.com/josh-silvas/dmux/releases/download/0.1.4/dmux_darwin_amd64.tar.gz"
-      sha256 "48f99ae063de93c34bcc960e5ee6193820985f1751082ace7ee795ffbc5227fc"
+      url "https://github.com/josh-silvas/dmux/releases/download/0.1.5/dmux_darwin_amd64.tar.gz"
+      sha256 "e28f71a4536c5c1b57b1746faa6c01f46b460d250a47862001907a2220edcc7b"
 
       def install
         bin.install 'dmux'
       end
     end
     on_arm do
-      url "https://github.com/josh-silvas/dmux/releases/download/0.1.4/dmux_darwin_arm64.tar.gz"
-      sha256 "15578436cca57fedde10e6455dc8a0ebe5abe1e895010068367d309062e04c19"
+      url "https://github.com/josh-silvas/dmux/releases/download/0.1.5/dmux_darwin_arm64.tar.gz"
+      sha256 "deca064c2cebb1ab6628164b99d99da99797b777b90190af8a4cc6d0d95428d8"
 
       def install
         bin.install 'dmux'
@@ -29,8 +29,8 @@ class Dmux < Formula
   on_linux do
     on_intel do
       if Hardware::CPU.is_64_bit?
-        url "https://github.com/josh-silvas/dmux/releases/download/0.1.4/dmux_linux_amd64.tar.gz"
-        sha256 "b9479ab50098206f18c70e696a7531b76e5a4816dcffec43348b048df889a038"
+        url "https://github.com/josh-silvas/dmux/releases/download/0.1.5/dmux_linux_amd64.tar.gz"
+        sha256 "e52bd1ad0172ea045cc06a4d3da523344a52b3096a1719e0cfd10c9aa0942860"
 
         def install
           bin.install 'dmux'
@@ -41,15 +41,15 @@ class Dmux < Formula
 
   def caveats
     <<~EOS
-      DMux v0.1.4 Notes:
+      DMux v0.1.5 Notes:
         1. DMux will create it's own system keychain called 'DMux-Keyring'
           1a. You may need to reauthenticate dmux to this keychain after update because the binary is
               a different signature.
         2. Release changelog located at:
-          - https://github.com/josh-silvas/dmux/releases/tag/0.1.4
+          - https://github.com/josh-silvas/dmux/releases/tag/0.1.5
         3. For issues with this tool, please submit a GitHub issue here:
           - https://github.com/josh-silvas/dmux/issues
-      v0.1.4 NEW RELEASE INFO:
+      v0.1.5 NEW RELEASE INFO:
         4. Initial release!
     EOS
   end
