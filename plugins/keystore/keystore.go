@@ -17,6 +17,7 @@ type Plugin struct {
 	core.PluginBase
 	argR *string
 	argV *string
+	argL *bool
 }
 
 // Register : register the plugin with the parser
@@ -51,7 +52,7 @@ func (p Plugin) Func(cfg keyring.Settings) {
 		t.SetOutputMirror(os.Stdout)
 		t.AppendHeader(table.Row{*p.argV, "Key"})
 		t.AppendRows([]table.Row{{r.Username, r.Password()}})
-		t.SetStyle(table.StyleColoredBlackOnGreenWhite)
+		t.SetStyle(table.StyleDefault)
 		t.Render()
 	}
 }

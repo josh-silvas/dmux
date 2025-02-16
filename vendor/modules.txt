@@ -109,6 +109,20 @@ github.com/hashicorp/go-cleanhttp
 ## explicit; go 1.17
 github.com/jedib0t/go-pretty/v6/table
 github.com/jedib0t/go-pretty/v6/text
+# github.com/josh-silvas/gonautobot v0.0.0-20240904135958-2e21acaf8a8e
+## explicit; go 1.23.0
+github.com/josh-silvas/gonautobot
+github.com/josh-silvas/gonautobot/circuits
+github.com/josh-silvas/gonautobot/core
+github.com/josh-silvas/gonautobot/dcim
+github.com/josh-silvas/gonautobot/extras
+github.com/josh-silvas/gonautobot/ipam
+github.com/josh-silvas/gonautobot/plugins
+github.com/josh-silvas/gonautobot/plugins/bgp
+github.com/josh-silvas/gonautobot/shared
+github.com/josh-silvas/gonautobot/shared/nested
+github.com/josh-silvas/gonautobot/tenancy
+github.com/josh-silvas/gonautobot/virtualization
 # github.com/josharian/intern v1.0.0
 ## explicit; go 1.5
 github.com/josharian/intern
@@ -125,6 +139,12 @@ github.com/mailru/easyjson/jwriter
 github.com/manifoldco/promptui
 github.com/manifoldco/promptui/list
 github.com/manifoldco/promptui/screenbuf
+# github.com/mattn/go-colorable v0.1.14
+## explicit; go 1.18
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.20
+## explicit; go 1.15
+github.com/mattn/go-isatty
 # github.com/mattn/go-runewidth v0.0.15
 ## explicit; go 1.9
 github.com/mattn/go-runewidth
@@ -161,8 +181,14 @@ github.com/pmezard/go-difflib/difflib
 # github.com/rivo/uniseg v0.2.0
 ## explicit; go 1.12
 github.com/rivo/uniseg
-# github.com/stretchr/testify v1.8.4
-## explicit; go 1.20
+# github.com/rs/zerolog v1.33.0
+## explicit; go 1.15
+github.com/rs/zerolog
+github.com/rs/zerolog/internal/cbor
+github.com/rs/zerolog/internal/json
+github.com/rs/zerolog/log
+# github.com/stretchr/testify v1.9.0
+## explicit; go 1.17
 github.com/stretchr/testify/assert
 # go.mongodb.org/mongo-driver v1.13.1
 ## explicit; go 1.13
@@ -208,7 +234,7 @@ golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 ## explicit; go 1.18
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.19.0
+# golang.org/x/sys v0.30.0
 ## explicit; go 1.18
 golang.org/x/sys/cpu
 golang.org/x/sys/plan9

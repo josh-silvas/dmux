@@ -138,7 +138,7 @@ jobs:
           rm ./darwin/dmux*checksums.txt
           rm ./linux/dmux*checksums.txt
       - name: "Run GoReleaser Release"
-        uses: "goreleaser/goreleaser-action@3fa32b8bb5620a2c1afe798654bbad59f9da4906"  # v4.4.0
+        uses: "goreleaser/goreleaser-action@v6.1.0"  # v4.4.0
         with:
           distribution: "goreleaser"
           version: "1.23.0"

@@ -1,6 +1,7 @@
 package sot
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -9,12 +10,16 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-// SupportedSoT : A map of supported SoT backends.
-var SupportedSoT = map[string]string{
-	"nautobot_v1": "Nautobot v1",
-	"nautobot_v2": "Nautobot v2",
-	"netbox":      "Netbox",
-}
+var (
+	// SupportedSoT : A map of supported SoT backends.
+	SupportedSoT = map[string]string{
+		"nautobot": "Nautobot",
+		"netbox":   "Netbox",
+	}
+
+	// ErrorNotImplemented : Error returned when a method is not implemented.
+	ErrorNotImplemented = errors.New("not implemented")
+)
 
 const (
 	// ByIP : Used to search for a device by IP address.
@@ -69,26 +74,16 @@ func New(settings keyring.Settings) (SoT, error) {
 	}
 
 	switch strings.ToLower(backend.String()) {
-	case "nautobot_v1":
-		nbURL, err := settings.KeyFromSection("nautobot_v1", "url", setSotURL)
+	case "nautobot":
+		nbURL, err := settings.KeyFromSection("nautobot", "url", setSotURL)
 		if err != nil {
 			return nil, fmt.Errorf("settings.KeyFromSection: %w", err)
 		}
-		nKey, err := settings.NautobotV1()
+		nKey, err := settings.Nautobot()
 		if err != nil {
-			l.Fatalf("NautobotV1(%s)", err)
+			l.Fatalf("Nautobot(%s)", err)
 		}
-		return NewNautobotV1(nKey.Password(), nbURL.String())
-	case "nautobot_v2":
-		nbURL, err := settings.KeyFromSection("nautobot_v2", "url", setSotURL)
-		if err != nil {
-			return nil, fmt.Errorf("settings.KeyFromSection: %w", err)
-		}
-		nKey, err := settings.NautobotV2()
-		if err != nil {
-			l.Fatalf("NautobotV2(%s)", err)
-		}
-		return NewNautobotV2(nKey.Password(), nbURL.String())
+		return NewNautobot(nKey.Password(), nbURL.String())
 	case "netbox":
 		nbURL, err := settings.KeyFromSection("netbox", "url", setSotURL)
 		if err != nil {
