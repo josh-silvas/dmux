@@ -102,9 +102,6 @@ github.com/google/uuid
 # github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c
 ## explicit
 github.com/gsterjov/go-libsecret
-# github.com/hashicorp/go-cleanhttp v0.5.2
-## explicit; go 1.13
-github.com/hashicorp/go-cleanhttp
 # github.com/jedib0t/go-pretty/v6 v6.5.3
 ## explicit; go 1.17
 github.com/jedib0t/go-pretty/v6/table
@@ -243,7 +240,7 @@ golang.org/x/sys/windows
 # golang.org/x/term v0.19.0
 ## explicit; go 1.18
 golang.org/x/term
-# golang.org/x/text v0.14.0
+# golang.org/x/text v0.22.0
 ## explicit; go 1.18
 golang.org/x/text/cases
 golang.org/x/text/internal
