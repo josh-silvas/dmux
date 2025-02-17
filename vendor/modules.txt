@@ -102,9 +102,6 @@ github.com/google/uuid
 # github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c
 ## explicit
 github.com/gsterjov/go-libsecret
-# github.com/hashicorp/go-cleanhttp v0.5.2
-## explicit; go 1.13
-github.com/hashicorp/go-cleanhttp
 # github.com/jedib0t/go-pretty/v6 v6.5.3
 ## explicit; go 1.17
 github.com/jedib0t/go-pretty/v6/table
@@ -187,9 +184,10 @@ github.com/rs/zerolog
 github.com/rs/zerolog/internal/cbor
 github.com/rs/zerolog/internal/json
 github.com/rs/zerolog/log
-# github.com/stretchr/testify v1.9.0
+# github.com/stretchr/testify v1.10.0
 ## explicit; go 1.17
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/assert/yaml
 # go.mongodb.org/mongo-driver v1.13.1
 ## explicit; go 1.13
 go.mongodb.org/mongo-driver/bson
